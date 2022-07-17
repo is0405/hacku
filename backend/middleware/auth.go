@@ -69,3 +69,4 @@ func getTokenFromHeader(req *http.Request) (string, error) {
 	}
 
 	return "", errors.New("authorization header format must be 'Bearer {token}'")
+}

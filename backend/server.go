@@ -8,11 +8,13 @@ import (
 	"net/http"
 	"os"
 
+	"firebase.google.com/go/auth"
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
 
 	// "github.com/is0405/docker-env/controller"
 	"github.com/is0405/docker-env/db"
+	"github.com/is0405/docker-env/middleware"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"github.com/rs/cors"
@@ -90,7 +92,7 @@ func (s *Server) Route() *mux.Router {
 	r := mux.NewRouter()
 	//# モック API　一覧
 
-	loginController := controller.NewLogin(s.db, s.jwtSecretKey)
+	//loginController := controller.NewLogin(s.db, s.jwtSecretKey)
 	//r.Methods(http.MethodPost).Path("/api/login").Handler(commonChain.Then(AppHandler{loginController.login}))
 	return r
 }
