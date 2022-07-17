@@ -9,9 +9,10 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./data:/var/lib/mysql
+      - data-volume:/var/lib/mysql
       - ./.my.cnf:/etc/mysql/conf.d/my.cnf
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    
   migration:
     image: flyway/flyway
     depends_on:
@@ -36,19 +37,23 @@ services:
   frontend:
     build:
       context: ./frontend
-    command: npm run dev
     container_name: frontend
+    command: npm start
     ports:
       - 3000:3000
     environment:
       - BACKEND_API_BASE=http://localhost:1991
     volumes:
       - ./frontend:/app
-      - ./node_modules-volume:/app/node_modules
+      - node_modules-volume:/app/node_modules
     working_dir: /app
     networks:
       - nginx_network
-      
+
+volumes:
+  data-volume:
+  node_modules-volume:
+
 networks:
   nginx_network:
     driver: bridge
