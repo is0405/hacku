@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
 
-	// "github.com/is0405/docker-env/controller"
+	"github.com/is0405/docker-env/controller"
 	"github.com/is0405/docker-env/db"
 	"github.com/is0405/docker-env/middleware"
 	"github.com/gorilla/mux"
@@ -92,7 +92,7 @@ func (s *Server) Route() *mux.Router {
 	r := mux.NewRouter()
 	//# モック API　一覧
 
-	//loginController := controller.NewLogin(s.db, s.jwtSecretKey)
-	//r.Methods(http.MethodPost).Path("/api/login").Handler(commonChain.Then(AppHandler{loginController.login}))
+	loginController := controller.NewLogin(s.db, s.jwtSecretKey)
+	r.Methods(http.MethodPost).Path("/login").Handler(commonChain.Then(AppHandler{loginController.login}))
 	return r
 }
