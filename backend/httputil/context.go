@@ -3,7 +3,7 @@ package httputil
 import (
 	"context"
 
-	"github.com/is0405/docker-env/model"
+	"github.com/is0405/hacku/model"
 	"github.com/pkg/errors"
 )
 

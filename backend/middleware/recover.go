@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/is0405/docker-env/httputil"
+	"github.com/is0405/hacku/httputil"
 )
 
 func RecoverMiddleware(next http.Handler) http.Handler {

@@ -12,9 +12,9 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
 
-	"github.com/is0405/docker-env/controller"
-	"github.com/is0405/docker-env/db"
-	"github.com/is0405/docker-env/middleware"
+	"github.com/is0405/hacku/controller"
+	"github.com/is0405/hacku/db"
+	"github.com/is0405/hacku/middleware"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"github.com/rs/cors"
@@ -31,8 +31,9 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-func (s *Server) Init(datasource string, jwtSecretKeyPath string) error {
-	jwtSecretKeyFile, err := os.Open(jwtSecretKeyPath)
+func (s *Server) Init(datasource string) error {
+	// jwtSecretKeyFile, err := os.Open(jwtSecretKeyPath)
+	jwtSecretKeyFile, err := os.Open(".hacku/jwt-secret.key")
 	if err != nil {
 		return fmt.Errorf("failed read jwt secret key file. %s", err)
 	}
@@ -72,10 +73,8 @@ func (s *Server) Route() *mux.Router {
 		AllowedOrigins: []string{"*"},
 		AllowedHeaders: []string{"Authorization"},
 		AllowedMethods: []string{
-			http.MethodHead,
 			http.MethodGet,
 			http.MethodPost,
-			http.MethodPut,
 			http.MethodPatch,
 			http.MethodDelete,
 		},
@@ -90,9 +89,29 @@ func (s *Server) Route() *mux.Router {
 	)
 
 	r := mux.NewRouter()
-	//# モック API　一覧
-
+	//# API　一覧
+	//ログイン
 	loginController := controller.NewLogin(s.db, s.jwtSecretKey)
-	r.Methods(http.MethodPost).Path("/login").Handler(commonChain.Then(AppHandler{loginController.login}))
+	r.Methods(http.MethodPost).Path("/login").Handler(commonChain.Then(AppHandler{loginController.Login}))
+
+	//アカウント情報
+	UserControlloer := controller.NewUser(s.db)
+	r.Methods(http.MethodPost).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.CreateUser}))
+	r.Methods(http.MethodGet).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.GetUser}))
+	r.Methods(http.MethodPatch).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.UpdateUser}))
+	r.Methods(http.MethodDelete).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.DeleteUser}))
+
+	//雇用情報
+	RecruitmentControlloer := controller.NewRecruitment(s.db)
+	r.Methods(http.MethodPost).Path("/recruitment").Handler(authChain.Then(AppHandler{RecruitmentControlloer.CreateRecruitment}))
+	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetRecruitment}))
+	r.Methods(http.MethodPatch).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.UpdateRecruitment}))
+	r.Methods(http.MethodDelete).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.DeleteRecruitment}))
+	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}/participation").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetParticipation}))
+
+	//申請情報
+	HiredControlloer := controller.NewHired(s.db)
+	r.Methods(http.MethodPost).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
+	r.Methods(http.MethodDelete).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.DeleteHired}))
 	return r
 }

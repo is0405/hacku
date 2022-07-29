@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"encoding/json"
-	"errors"
+	// "encoding/json"
+	// "errors"
 	"net/http"
 
-	"github.com/is0405/hacku/httputil"
-	"github.com/is0405/hacku/model"
-	"github.com/is0405/hacku/repository"
-	"github.com/dgrijalva/jwt-go"
+	// "github.com/is0405/hacku/httputil"
+	// "github.com/is0405/hacku/model"
+	// "github.com/is0405/hacku/repository"
+	// "github.com/dgrijalva/jwt-go"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -37,7 +37,7 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 	//response構造体に用意したデータを格納
 	res := LoginResponse{
 		Token: "",
-		UseId: 0,
+		UserId: 0,
 	}
 
 	return http.StatusOK, res, nil

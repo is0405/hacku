@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
-	"github.com/is0405/docker-env/httputil"
-	"github.com/is0405/docker-env/model"
+	"github.com/is0405/hacku/httputil"
+	"github.com/is0405/hacku/model"
 	"github.com/jmoiron/sqlx"
 )
 

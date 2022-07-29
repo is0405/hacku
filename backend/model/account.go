@@ -4,7 +4,7 @@ package model
 type User struct {
 	Age       int    `db:"age" json:"age"`
 	CreatedAt string `db:"created_at" json:"createdAt"`
-	Faculty   string `db:"faculty" json:"faculty"`
+	Faculty   int `db:"faculty" json:"faculty"`
 	Gender    int    `db:"gender" json:"gender"`
 	Id        int    `db:"id" json:"id"`
 	Mail      string `db:"mail" json:"mail"`
