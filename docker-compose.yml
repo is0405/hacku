@@ -21,6 +21,7 @@ services:
     volumes:
       - ./database/migration/schema:/flyway/sql
 
+
   backend:
     build:
       context: ./backend

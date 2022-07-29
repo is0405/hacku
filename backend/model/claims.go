@@ -5,7 +5,6 @@ import (
 )
 
 type Claims struct {
-	ID           int    `json:"id"` 
-	Role         string `json:"role"` // Audience (Ex. user, admin)
+	UserId           int    `json:"user_id"`
 	jwt.StandardClaims        // expires, issued at, not before
 }
