@@ -96,7 +96,7 @@ func (s *Server) Route() *mux.Router {
 
 	//アカウント情報
 	UserControlloer := controller.NewUser(s.db)
-	r.Methods(http.MethodPost).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.CreateUser}))
+	r.Methods(http.MethodPost).Path("/users").Handler(commonChain.Then(AppHandler{UserControlloer.CreateUser}))
 	r.Methods(http.MethodGet).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.GetUser}))
 	r.Methods(http.MethodPatch).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.UpdateUser}))
 	r.Methods(http.MethodDelete).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.DeleteUser}))
