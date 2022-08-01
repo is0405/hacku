@@ -32,6 +32,9 @@ func CheckUser(mu *model.User) bool {
 	return true
 }
 
+func CheckRecruitment(ma *model.Appeal) bool {
+	return true
+}
 func MailCheck(str string) bool {
 	chars := []string{"@", "."}
     r := strings.Join(chars, "")

@@ -6,7 +6,7 @@ type Appeal struct {
 	Contents         string `db:"contents" json:"contents"`
 	CreatedAt        string `db:"created_at" json:"createdAt"`
 	Id               int    `db:"id" json:"id"`
-	MaxParticipation int    `db:"max_participation" json:"maxParticipate"`
+	MaxParticipation int    `db:"max_participation" json:"maxParticipation"`
 	Reward           string `db:"reward" json:"reward"`
 	SubmitId         int    `db:"submit_id" json:"submitId"`
 	Term             string `db:"term" json:"term"`

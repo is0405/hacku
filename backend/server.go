@@ -100,17 +100,19 @@ func (s *Server) Route() *mux.Router {
 	r.Methods(http.MethodGet).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.GetUser}))
 	r.Methods(http.MethodPatch).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.UpdateUser}))
 	r.Methods(http.MethodDelete).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.DeleteUser}))
-	r.Methods(http.MethodPost).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.CreateUser}))
-	r.Methods(http.MethodGet).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.GetSubUser}))
+	r.Methods(http.MethodPost).Path("/users/create").Handler(commonChain.Then(AppHandler{UserControlloer.CreateUser}))
+	// r.Methods(http.MethodGet).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.GetSubUser}))
 
 	//雇用情報
 	RecruitmentControlloer := controller.NewRecruitment(s.db)
 	r.Methods(http.MethodPost).Path("/recruitment").Handler(authChain.Then(AppHandler{RecruitmentControlloer.CreateRecruitment}))
-	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetRecruitment}))
+	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetRecruitmentFromID}))
 	r.Methods(http.MethodPatch).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.UpdateRecruitment}))
 	r.Methods(http.MethodDelete).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.DeleteRecruitment}))
 	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}/participation").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetParticipation}))
-
+	r.Methods(http.MethodGet).Path("/recruitment/all/mine").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetMyAllRecruitment}))
+	r.Methods(http.MethodGet).Path("/recruitment/all/other").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetOtherAllRecruitment}))
+	
 	//申請情報
 	HiredControlloer := controller.NewHired(s.db)
 	r.Methods(http.MethodPost).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
