@@ -23,6 +23,11 @@ func NewRecruitment(db *sqlx.DB) *Recruitment {
 	return &Recruitment{db: db}
 }
 
+type RecruitmentResponse struct {
+	Appeal           *model.Appeal  `json:"appeal"`
+	NowParticipation int           `json:"nowparticipation"`
+}
+
 func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
@@ -52,34 +57,61 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 	return http.StatusOK, nil, nil
 }
 
+//特定の雇用情報をGet
 func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	_, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	id, err := util.URLToInt(r)
+	aid, err := util.URLToInt(r)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 
-	res, err := repository.GetRecruitmentFromRId(a.db, id)
+	appeal, err := repository.GetRecruitmentFromRId(a.db, aid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
+	}
+
+	cnt, err := repository.CountUidFromAid(a.db, aid)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	res := RecruitmentResponse{
+		Appeal: appeal,
+		NowParticipation: cnt,
 	}
 
 	return http.StatusOK, res, nil
 }
 
+//自分が提示した雇用情報を全て表示
 func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	res, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	appeals, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
+	}
+
+	var res []RecruitmentResponse
+	for _, v := range appeals {
+		cnt, err := repository.CountUidFromAid(a.db, v.Id)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+
+		ins := RecruitmentResponse{
+			Appeal: &v,
+			NowParticipation: cnt,
+		}
+		
+		res = append(res, ins)
 	}
 
 	return http.StatusOK, res, nil
@@ -91,9 +123,24 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 		return http.StatusInternalServerError, nil, err
 	}
 
-	res, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	appeals, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
+	}
+
+	var res []RecruitmentResponse
+	for _, v := range appeals {
+		cnt, err := repository.CountUidFromAid(a.db, v.Id)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+
+		ins := RecruitmentResponse{
+			Appeal: &v,
+			NowParticipation: cnt,
+		}
+		
+		res = append(res, ins)
 	}
 
 	return http.StatusOK, res, nil
