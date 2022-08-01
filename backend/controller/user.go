@@ -13,7 +13,7 @@ import (
 	// "github.com/dgrijalva/jwt-go"
 	"github.com/jmoiron/sqlx"
 
-	// "fmt"
+	"fmt"
 )
 
 type User struct {
@@ -56,6 +56,7 @@ func (a *User) GetSubUser(_ http.ResponseWriter, r *http.Request) (int, interfac
 	// fmt.Println(su.Code)
 	mu, err := repository.GetSubUser(a.db, su.Id, su.Code)
 	if err != nil {
+		fmt.Println("err")
 		return http.StatusInternalServerError, nil, err
 	}
 	

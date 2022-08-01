@@ -12,7 +12,7 @@ func main() {
 	var databaseDatasource string
 	var port int
 
-	flag.StringVar(&databaseDatasource, "databaseDatasource", "root:password@tcp(localhost:3306)/dbapp", "Should looks like root:password@tcp(hostname:port)/dbname")
+	flag.StringVar(&databaseDatasource, "databaseDatasource", "root:password@tcp(localhost:3306)/hacku", "Should looks like root:password@tcp(hostname:port)/dbname")
 	flag.IntVar(&port, "port", 1991, "Web server port")
 	flag.Parse()
 
