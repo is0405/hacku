@@ -1,8 +1,8 @@
 DBNAME:=hacku
 # https://docs.docker.com/docker-for-mac/networking/#use-cases-and-workarounds
 DOCKER_DNS:=db
-FLYWAY_CONF?=-url=jdbc:mysql://$(DOCKER_DNS):3306/$(DBNAME) -user=root -password=password
-
+# FLYWAY_CONF?=-url=jdbc:mysql://$(DOCKER_DNS):3306/$(DBNAME) -user=root -password=password
+FLYWAY_CONF?=-url=jdbc:mysql://$(DOCKER_DNS):3306/$(DBNAME)?allowPublicKeyRetrieval=true -user=root -password=password
 export DATABASE_DATASOURCE:=root:password@tcp($(DOCKER_DNS):3306)/$(DBNAME)
 
 compose/build:
