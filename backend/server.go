@@ -100,6 +100,8 @@ func (s *Server) Route() *mux.Router {
 	r.Methods(http.MethodGet).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.GetUser}))
 	r.Methods(http.MethodPatch).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.UpdateUser}))
 	r.Methods(http.MethodDelete).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.DeleteUser}))
+	r.Methods(http.MethodPost).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.CreateUser}))
+	r.Methods(http.MethodGet).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.GetSubUser}))
 
 	//雇用情報
 	RecruitmentControlloer := controller.NewRecruitment(s.db)

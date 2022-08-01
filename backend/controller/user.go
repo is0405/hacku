@@ -12,6 +12,8 @@ import (
 	"github.com/is0405/hacku/util"
 	// "github.com/dgrijalva/jwt-go"
 	"github.com/jmoiron/sqlx"
+
+	// "fmt"
 )
 
 type User struct {
@@ -22,6 +24,10 @@ func NewUser(db *sqlx.DB) *User {
 	return &User{db: db}
 }
 
+type SubUser struct {
+	Id   int     `json:"id"`
+	Code string  `json:"code"`
+}
 
 func (a *User) GetUser(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())
@@ -37,6 +43,25 @@ func (a *User) GetUser(_ http.ResponseWriter, r *http.Request) (int, interface{}
 	return http.StatusOK, res, nil
 }
 
+func (a *User) GetSubUser(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+
+	su := &SubUser{}
+	
+	err := json.NewDecoder(r.Body).Decode(&su);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	// fmt.Println(su.Id)
+	// fmt.Println(su.Code)
+	mu, err := repository.GetSubUser(a.db, su.Id, su.Code)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	return http.StatusOK, mu, nil
+}
+
 func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	
 	mu := &model.User{}
@@ -50,11 +75,42 @@ func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
 	}
 
+	mu.Password = util.HashGenerateSha256(mu.Password)
+	code := util.CodeGenerate()
+
 	UserService := service.NewUser(a.db)
-	_, err = UserService.CreateSubUser(mu)
+	subId, err := UserService.CreateSubUser(mu, code)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}	
+
+	res := SubUser {
+		Id: int(subId),
+		Code: code,	
+	}
+	
+	return http.StatusOK, res, nil
+}
+
+func (a *User) CreateUser(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	
+	su := &SubUser{}
+	
+	err := json.NewDecoder(r.Body).Decode(&su);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	mu, err := repository.GetSubUser(a.db, su.Id, su.Code)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	UserService := service.NewUser(a.db)
+	_, err = UserService.CreateUser(su.Id, mu)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 	
 	return http.StatusOK, nil, nil
 }

@@ -7,6 +7,8 @@ import (
 
 	"github.com/is0405/hacku/model"
 	"github.com/is0405/hacku/repository"
+
+	//"fmt"
 )
 
 type User struct {
@@ -17,11 +19,10 @@ func NewUser (db *sqlx.DB) *User {
 	return &User{db}
 }
 
-func (a *User) CreateSubUser(smu *model.User) (int64, error) {
+func (a *User) CreateSubUser(smu *model.User, code string) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
-	
-		user, err := repository.CreateSubUser(a.db, smu)	
+		user, err := repository.CreateSubUser(a.db, smu, code)	
 		if err != nil {
 			return err
 		}

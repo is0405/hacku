@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	// "errors"
 	"net/http"
+	"time"
 
 	// "github.com/is0405/hacku/httputil"
-	// "github.com/is0405/hacku/model"
-	// "github.com/is0405/hacku/repository"
+	"github.com/is0405/hacku/model"
+	"github.com/is0405/hacku/repository"
 	"github.com/is0405/hacku/util"
-	// "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -22,19 +23,12 @@ func NewLogin(db *sqlx.DB, jwtSecretKey []byte) *Login {
 	return &Login{db: db, jwtSecretKey: jwtSecretKey}
 }
 
-// PostLoginJSONBody defines parameters for PostLogin.
-type LoginBody struct {
-	Mail     string `json:"mail"`
-	Password string `json:"password"`
-}
-
 type LoginResponse struct {
 	Token     string `json:"token"`
-	UserId    int    `json:"user_id"`
 }
 
 func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	lb := &LoginBody{}
+	lb := &model.LoginBody{}
 
 	err := json.NewDecoder(r.Body).Decode(&lb);
 	if err != nil {
@@ -45,11 +39,32 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 		return http.StatusBadRequest, nil, err
 	}
 
+	lb.Password = util.HashGenerateSha256(lb.Password)
+	userId, err := repository.CheckLogin(a.db, lb)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	
+	// jwtの作成
+	claims := model.Claims{
+		userId,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //トークン発行から24時間で使えなくなる.
+			Issuer:    "com.hacku",
+		},
+	}
+	
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString(a.jwtSecretKey)
+
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 	
 	//response構造体に用意したデータを格納
 	res := LoginResponse{
-		Token: "",
-		UserId: 0,
+		Token: signedToken,
 	}
 
 	return http.StatusOK, res, nil
