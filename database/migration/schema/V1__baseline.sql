@@ -3,7 +3,7 @@ CREATE TABLE `user` (
   `name` varchar(32) NOT NULL,
   `mail` varchar(64) NOT NULL,
   `age` int NOT NULL DEFAULT 18,
-  `faculy` int  NOT NULL,
+  `faculty` int  NOT NULL,
   `password` varchar(255) NOT NULL,
   `gender` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -15,9 +15,10 @@ CREATE TABLE `sub_user` (
   `name` varchar(32) NOT NULL,
   `mail` varchar(64) NOT NULL,
   `age` int NOT NULL DEFAULT 18,
-  `faculy` int  NOT NULL,
+  `faculty` int  NOT NULL,
   `password` varchar(255) NOT NULL,
   `gender` int NOT NULL,
+  `code` char(6) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
