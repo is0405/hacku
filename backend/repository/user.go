@@ -78,3 +78,13 @@ WHERE recruitment.id = ? && recruitment.submit_id = ?;`, rid, ruid);
 	
 	return a, nil
 }
+
+func GetUserFromMail(db *sqlx.DB, mail string) (int, error) {
+	var u int
+	if err := db.Get(&u, `SELECT COUNT(id) FROM user WHERE mail = ?;`, mail);
+	err != nil {
+		return 0, err
+	}
+	
+	return u, nil
+}

@@ -79,6 +79,15 @@ func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, inter
 	mu.Password = util.HashGenerateSha256(mu.Password)
 	code := util.CodeGenerate()
 
+	cnt, err := repository.GetUserFromMail(a.db, mu.Mail)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	if cnt != 0 {
+		return http.StatusBadRequest, nil, errors.New("already existed")
+	}
+
 	UserService := service.NewUser(a.db)
 	subId, err := UserService.CreateSubUser(mu, code)
 	if err != nil {
