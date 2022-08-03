@@ -2,58 +2,51 @@ version: '3'
 services:
   db:
     command: --default-authentication-plugin=mysql_native_password
-    container_name: db
+    container_name: hacku-db
     environment:
       MYSQL_ROOT_PASSWORD: password
     image: mysql:8.0
-    ports:
-      - 3306:3306
+    cap_add:
+      - SYS_NICE
     volumes:
       - data-volume:/var/lib/mysql
       - ./.my.cnf:/etc/mysql/conf.d/my.cnf
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mysqld --character-set-server=utf8mb4  --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake
     
   migration:
     image: flyway/flyway
     depends_on:
       - db
-    container_name: migration
+    container_name: hacku-migration
     volumes:
       - ./database/migration/schema:/flyway/sql
+
 
   backend:
     build:
       context: ./backend
-    command: reflex -r '\.go$$' -s -- sh -c 'go run cmd/api/main.go -databaseDatasource="${DATABASE_DATASOURCE}" -port=1991'
-    container_name: backend
+    command: reflex -r '\.go$$' -s -- sh -c 'go run cmd/api/main.go -databaseDatasource="${DATABASE_DATASOURCE}" -port=10001'
+    container_name: hacku-backend
     ports:
-      - 1991:1991
+      - 10001:10001
     volumes:
       - ./backend:/app
     working_dir: /app
-    networks:
-      - nginx_network
 
   frontend:
     build:
       context: ./frontend
-    container_name: frontend
+    container_name: hacku-frontend
     command: npm start
     ports:
       - 3000:3000
     environment:
-      - BACKEND_API_BASE=http://localhost:1991
+      - BACKEND_API_BASE=http://localhost:10001
     volumes:
       - ./frontend:/app
       - node_modules-volume:/app/node_modules
     working_dir: /app
-    networks:
-      - nginx_network
 
 volumes:
   data-volume:
   node_modules-volume:
-
-networks:
-  nginx_network:
-    driver: bridge
