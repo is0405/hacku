@@ -6,10 +6,11 @@ import (
 	"github.com/is0405/hacku/model"
 )
 
-func CheckUser(mu *model.User) bool {
+func CheckUser(mu *model.User, passwordCheck bool) bool {
 	if mu.Name == "" || !NameCheck(mu.Name) {
 		return false
 	}
+	mu.Name = ReplaceString(mu.Name)
 	
 	if mu.Age < 18 {
 		return false
@@ -28,13 +29,69 @@ func CheckUser(mu *model.User) bool {
 	if mu.Mail == "" || !MailCheck(mu.Mail) {
 		return false
 	}
+	mu.Mail = ReplaceString(mu.Mail)
+
+	if passwordCheck {
+		if mu.Password == "" {
+			return false
+		}
+
+		if strings.Contains(mu.Password, "`") {
+			return false
+		}
+	}
 	
 	return true
 }
 
-func CheckRecruitment(ma *model.Appeal) bool {
+func CheckRecruitment(ma *model.Recruitment) bool {
+	if ma.Contents == "" {
+		return false
+	}
+	ma.Contents = ReplaceString(ma.Contents)
+
+	if ma.Conditions == "" {
+		return false
+	}
+	ma.Conditions = ReplaceString(ma.Conditions)
+
+	if ma.Reward == "" {
+		return false
+	}
+	ma.Reward = ReplaceString(ma.Reward)
+
+	if ma.MaxParticipation <= 0 {
+		return false
+	}
+
+	if ma.StartRecruitmentPeriod == "" {
+		return false
+	}
+	ma.StartRecruitmentPeriod = ReplaceString(ma.StartRecruitmentPeriod)
+
+	if ma.FinishRecruitmentPeriod == "" {
+		return false
+	}
+	ma.FinishRecruitmentPeriod = ReplaceString(ma.FinishRecruitmentPeriod)
+
+	if ma.StartImplementationPeriod == "" {
+		return false
+	}
+	ma.StartImplementationPeriod = ReplaceString(ma.StartImplementationPeriod)
+
+	if ma.FinishImplementationPeriod == "" {
+		return false
+	}
+	ma.FinishImplementationPeriod = ReplaceString(ma.FinishImplementationPeriod)
+
+	if ma.Title == "" {
+		return false
+	}
+	ma.Title = ReplaceString(ma.Title)
+	
 	return true
 }
+
 func MailCheck(str string) bool {
 	chars := []string{"@", "."}
     r := strings.Join(chars, "")
@@ -72,4 +129,9 @@ func NameCheck(str string) bool {
 		return false
 	}
 	return true
+}
+
+func ReplaceString(str string) string {
+	str = strings.Replace(str, "`", "'", -1)
+	return str
 }

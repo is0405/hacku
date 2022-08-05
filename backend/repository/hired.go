@@ -6,11 +6,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func CountFromAidUid(db *sqlx.DB, aid int, uid int) (int, error) {
+func CountFromRidUid(db *sqlx.DB, rid int, uid int) (int, error) {
 	var a int
 	if err := db.Get(&a, `
-	SELECT COUNT(id) FROM participation WHERE user_id = ? && appeal_id = ?;
-	`, uid, aid); err != nil {
+	SELECT COUNT(id) FROM participation WHERE user_id = ? && recruitment_id = ?;
+	`, uid, rid); err != nil {
 		return 0, err
 	}
 	
@@ -19,21 +19,21 @@ func CountFromAidUid(db *sqlx.DB, aid int, uid int) (int, error) {
 
 func PostHired(db *sqlx.DB, aid int, uid int) (sql.Result, error) {
 	return db.Exec(`
-INSERT INTO participation (appeal_id, user_id)
+INSERT INTO participation (recruitment_id, user_id)
 VALUES (?, ?)
 `, aid, uid)
 }
 
 func DeleteHired(db *sqlx.DB, aid int, uid int) (sql.Result, error) {
 	return db.Exec(`
-DELETE FROM participation WHERE user_id = ? && appeal_id = ?;
+DELETE FROM participation WHERE user_id = ? && recruitment_id = ?;
 `, uid, aid)
 }
 
-func CountUidFromAid(db *sqlx.DB, aid int) (int, error) {
+func CountUidFromRid(db *sqlx.DB, aid int) (int, error) {
 	var a int
 	if err := db.Get(&a, `
-	SELECT COUNT(user_id) FROM participation WHERE appeal_id = ?;
+	SELECT COUNT(user_id) FROM participation WHERE recruitment_id = ?;
 	`, aid); err != nil {
 		return 0, err
 	}
