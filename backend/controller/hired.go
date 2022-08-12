@@ -33,14 +33,29 @@ func (a *Hired) PostHired(_ http.ResponseWriter, r *http.Request) (int, interfac
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-
-	cnt, err := repository.CountFromAidUid(a.db, aid, getc.UserId)
+	
+	mr, err := repository.GetRecruitmentFromRId(a.db, aid)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	//自分が登録していない
+	cnt, err := repository.CountFromRidUid(a.db, aid, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
 	if cnt == 0 {
 		return http.StatusBadRequest, nil, errors.New("already applied")
+	}
+
+	nowParticipation, err := repository.CountUidFromRid(a.db, aid)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	if mr.MaxParticipation <= nowParticipation {
+		return http.StatusBadRequest, nil, errors.New("max_participation")
 	}
 
 	HiredService := service.NewHired(a.db)
@@ -63,7 +78,7 @@ func (a *Hired) DeleteHired(_ http.ResponseWriter, r *http.Request) (int, interf
 		return http.StatusBadRequest, nil, err
 	}
 
-	cnt, err := repository.CountFromAidUid(a.db, aid, getc.UserId)
+	cnt, err := repository.CountFromRidUid(a.db, aid, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}

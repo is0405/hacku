@@ -19,7 +19,7 @@ func NewRecruitment (db *sqlx.DB) *Recruitment {
 	return &Recruitment{db}
 }
 
-func (a *Recruitment) Create(ma *model.Appeal) (int64, error) {
+func (a *Recruitment) Create(ma *model.Recruitment) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
 		user, err := repository.CreateRecruitment(a.db, ma)	
@@ -44,7 +44,7 @@ func (a *Recruitment) Create(ma *model.Appeal) (int64, error) {
 	return createdId, nil
 }
 
-func (a *Recruitment) Update(ma *model.Appeal) (int64, error) {
+func (a *Recruitment) Update(ma *model.Recruitment) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
 		rec, err := repository.UpdateRecruitment(a.db, ma)	

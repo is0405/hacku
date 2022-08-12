@@ -72,7 +72,7 @@ func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusBadRequest, nil, err
 	}
 
-	if !util.CheckUser(mu) {
+	if !util.CheckUser(mu, true) {
 		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
 	}
 
@@ -139,7 +139,7 @@ func (a *User) UpdateUser(_ http.ResponseWriter, r *http.Request) (int, interfac
 		return http.StatusBadRequest, nil, err
 	}
 
-	if !util.CheckUser(mu) {
+	if !util.CheckUser(mu, false) {
 		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
 	}
 

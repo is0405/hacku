@@ -24,7 +24,7 @@ func NewRecruitment(db *sqlx.DB) *Recruitment {
 }
 
 type RecruitmentResponse struct {
-	Appeal           *model.Appeal  `json:"appeal"`
+	Recruitment      *model.Recruitment  `json:"recruitment"`
 	NowParticipation int           `json:"nowparticipation"`
 }
 
@@ -34,15 +34,18 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 		return http.StatusInternalServerError, nil, err
 	}
 
-	ma := &model.Appeal{}
+	ma := &model.Recruitment{}
 	
 	err = json.NewDecoder(r.Body).Decode(&ma);
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-
+	
 	ma.SubmitId = getc.UserId
-
+	if ma.Conditions == "" {
+		ma.Conditions = "特になし"
+	}
+	
 	if !util.CheckRecruitment(ma) {
 		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
 	}
@@ -69,18 +72,18 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 		return http.StatusBadRequest, nil, err
 	}
 
-	appeal, err := repository.GetRecruitmentFromRId(a.db, aid)
+	recruitment, err := repository.GetRecruitmentFromRId(a.db, aid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	cnt, err := repository.CountUidFromAid(a.db, aid)
+	cnt, err := repository.CountUidFromRid(a.db, aid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
 	res := RecruitmentResponse{
-		Appeal: appeal,
+		Recruitment: recruitment,
 		NowParticipation: cnt,
 	}
 
@@ -94,20 +97,20 @@ func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request
 		return http.StatusInternalServerError, nil, err
 	}
 
-	appeals, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	recruitments, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
 	var res []RecruitmentResponse
-	for _, v := range appeals {
-		cnt, err := repository.CountUidFromAid(a.db, v.Id)
+	for _, v := range recruitments {
+		cnt, err := repository.CountUidFromRid(a.db, v.Id)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
 
 		ins := RecruitmentResponse{
-			Appeal: &v,
+			Recruitment: &v,
 			NowParticipation: cnt,
 		}
 		
@@ -123,20 +126,20 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 		return http.StatusInternalServerError, nil, err
 	}
 
-	appeals, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	recruitments, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
 	var res []RecruitmentResponse
-	for _, v := range appeals {
-		cnt, err := repository.CountUidFromAid(a.db, v.Id)
+	for _, v := range recruitments {
+		cnt, err := repository.CountUidFromRid(a.db, v.Id)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
 
 		ins := RecruitmentResponse{
-			Appeal: &v,
+			Recruitment: &v,
 			NowParticipation: cnt,
 		}
 		
@@ -153,7 +156,7 @@ func (a *Recruitment) UpdateRecruitment(_ http.ResponseWriter, r *http.Request) 
 		return http.StatusInternalServerError, nil, err
 	}
 
-	ma := &model.Appeal{}
+	ma := &model.Recruitment{}
 	
 	err = json.NewDecoder(r.Body).Decode(&ma);
 	if err != nil {

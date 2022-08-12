@@ -24,14 +24,17 @@ CREATE TABLE `sub_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE `appeal` (
+CREATE TABLE `recruitment` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `conditions` varchar(255) NOT NULL,
   `contents` varchar(255) NOT NULL,
-  `max_participation` int  NOT NULL DEFAULT 0,
+  `max_participation` int  NOT NULL DEFAULT 1,
   `reward` varchar(255) NOT NULL,
   `title` varchar(64) NOT NULL,
-  `term` varchar(64) NOT NULL,
+  `start_recruitment_period` varchar(64) NOT NULL,
+  `finish_recruitment_period` varchar(64) NOT NULL,
+  `start_implementation_period` varchar(64) NOT NULL,
+  `finish_implementation_period` varchar(64) NOT NULL,
   `submit_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -39,7 +42,7 @@ CREATE TABLE `appeal` (
 
 CREATE TABLE `participation` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `appeal_id` int NOT NULL,
+  `recruitment_id` int NOT NULL,
   `user_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
