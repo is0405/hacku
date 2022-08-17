@@ -54,9 +54,9 @@ func (a *User) GetSubUser(_ http.ResponseWriter, r *http.Request) (int, interfac
 
 	// fmt.Println(su.Id)
 	// fmt.Println(su.Code)
-	mu, err := repository.GetSubUser(a.db, su.Id, su.Code)
+	mu, err := repository.GetSubUser(a.db, su.Id, su.Code);
 	if err != nil {
-		fmt.Println("err")
+		fmt.Println("err");
 		return http.StatusInternalServerError, nil, err
 	}
 	
@@ -71,6 +71,8 @@ func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, inter
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
+
+	// fmt.Println(util.HashGenerateSha256(mu.Password));
 
 	if !util.CheckUser(mu, true) {
 		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")

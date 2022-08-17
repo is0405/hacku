@@ -37,6 +37,12 @@ func (a *User) CreateSubUser(smu *model.User, code string) (int64, error) {
 		}
 		
 		createdId = id
+
+		_, err = repository.RemoveSubUserByDate(a.db);
+		if err != nil {
+			return err
+		}
+		
 		return err
 	}); err != nil {
 		return 0, errors.Wrap(err, "failed auth insert transaction")
@@ -66,6 +72,11 @@ func (a *User) CreateUser(sid int, mu *model.User) (int64, error) {
 		createdId = id
 
 		_, err = repository.RemoveSubUser(a.db, sid)
+		if err != nil {
+			return err
+		}
+
+		_, err = repository.RemoveSubUserByDate(a.db);
 		if err != nil {
 			return err
 		}

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/is0405/hacku/model"
 	"github.com/jmoiron/sqlx"
+	"time"
 	//"fmt"
 )
 
@@ -87,4 +88,14 @@ func GetUserFromMail(db *sqlx.DB, mail string) (int, error) {
 	}
 	
 	return u, nil
+}
+
+func RemoveSubUserByDate(db *sqlx.DB) (sql.Result, error) {
+	var layout = "2006-01-02 15:04:05";
+	t := time.Now();
+	date := t.Add(-time.Hour * 24).Format(layout);
+	
+	return db.Exec(`
+DELETE FROM sub_user WHERE ? < created_at;
+`, date);
 }
