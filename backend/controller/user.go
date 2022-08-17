@@ -100,6 +100,11 @@ func (a *User) CreateSubUser(_ http.ResponseWriter, r *http.Request) (int, inter
 		Id: int(subId),
 		Code: code,	
 	}
+
+	err = util.Send_mail(mu.Mail, mu.Name, code);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err;
+	}
 	
 	return http.StatusOK, res, nil
 }
