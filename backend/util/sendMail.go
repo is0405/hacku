@@ -6,15 +6,24 @@ import (
 	"html/template"
 	// "fmt"
 	"io"
+	"github.com/joho/godotenv"
 	
 	gomail "gopkg.in/gomail.v2"
 )
 
+
 const (
-	from_mailaddress string = "hacku@na-cat.com"
+	from_mailaddress string = "teaminamo.hacku@gmail.com"
+	
 )
 
 func Send_mail( to_mailaddress string, user_name string , code string ) error {
+	err := godotenv.Load(".env")
+	
+	if err != nil {
+		return err;
+	}
+	password := os.Getenv("PASSWORD")
 	
 	htmlTemplate, err := template.
 		New( "mail.tmpl" ).
@@ -35,6 +44,8 @@ func Send_mail( to_mailaddress string, user_name string , code string ) error {
 		return err
 	}
 
+	auth := LoginAuth(from_mailaddress, password)
+	
 	m := gomail.NewMessage()
 
 	m.SetHeader( "From", from_mailaddress )
@@ -42,7 +53,9 @@ func Send_mail( to_mailaddress string, user_name string , code string ) error {
 	m.SetHeader( "Subject", "会員登録手続きのお願い" )
 	m.SetBody( "text/html", string( htmlBytes ) )
 
-	d := gomail.Dialer{Host: "mailhog", Port: 1025}
+	d := gomail.NewDialer("smtp.gmail.com", 587, from_mailaddress, password)
+	d.Auth = auth;
+	
     if err := d.DialAndSend(m); err != nil {
         return err
     }
