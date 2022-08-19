@@ -55,7 +55,7 @@ DELETE FROM recruitment WHERE id = ?;
 
 func UpdateRecruitment(db *sqlx.DB, ma *model.Recruitment) (sql.Result, error) {
 	return db.Exec(`
-UPDATE recruitment SET title = ?, contents = ?, conditions = ?, maxparticipation = ?, reward = ?, start_recruitment_period = ?, finish_recruitment_period = ?, start_implementation_period = ?, finish_implementation_period = ? WHERE id = ?;
-`, ma.Title, ma.Contents, ma.Conditions, ma.MaxParticipation, ma.Reward, ma.StartRecruitmentPeriod, ma.FinishRecruitmentPeriod, ma.StartImplementationPeriod, ma.FinishImplementationPeriod, ma.Id)
+UPDATE recruitment SET title = ?, contents = ?, conditions = ?, maxparticipation = ?, reward = ?, start_recruitment_period = ?, finish_recruitment_period = ?, start_implementation_period = ?, finish_implementation_period = ?, gender = ?, min_age = ?, max_age = ? WHERE id = ?;
+`, ma.Title, ma.Contents, ma.Conditions, ma.MaxParticipation, ma.Reward, ma.StartRecruitmentPeriod, ma.FinishRecruitmentPeriod, ma.StartImplementationPeriod, ma.FinishImplementationPeriod, ma.Gender, ma.MinAge, ma.MaxAge, ma.Id)
 }
 
