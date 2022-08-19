@@ -88,7 +88,23 @@ func CheckRecruitment(ma *model.Recruitment) bool {
 		return false
 	}
 	ma.Title = ReplaceString(ma.Title)
-	
+
+	if ma.Gender < 0 || 3 < ma.Gender {
+		return false
+	}
+
+	if ma.MinAge == -1 {
+		ma.MinAge = 18
+	}
+
+	if ma.MaxAge == -1 {
+		ma.MaxAge = 60
+	}
+
+	if ma.MaxAge < ma.MinAge || ma.MinAge < 0 || 100 < ma.MaxAge {
+		return false
+	}
+
 	return true
 }
 

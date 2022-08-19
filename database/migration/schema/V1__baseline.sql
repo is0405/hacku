@@ -36,6 +36,9 @@ CREATE TABLE `recruitment` (
   `start_implementation_period` varchar(64) NOT NULL,
   `finish_implementation_period` varchar(64) NOT NULL,
   `submit_id` int NOT NULL,
+  `gender` int NOT NULL DEFAULT 0,
+  `min_age` int NOT NULL DEFAULT 18,
+  `max_age` int NOT NULL DEFAULT 60,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

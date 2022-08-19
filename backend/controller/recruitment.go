@@ -90,6 +90,41 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 	return http.StatusOK, res, nil
 }
 
+//お気に入りリストを用いて雇用リストを返す
+func (a *Recruitment) GetRecruitmentListFromFavoriteList(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	getc, err := httputil.GetClaimsFromContext(r.Context())
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	ridList, err := repository.GetFavoriteRecruitementList(a.db, getc.UserId)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	res := make([]RecruitmentResponse, 0)
+	for _, rid := range ridList {
+		recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+		
+		cnt, err := repository.CountUidFromRid(a.db, rid)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+
+		ins := RecruitmentResponse{
+			Recruitment: recruitment,
+			NowParticipation: cnt,
+		}
+
+		res = append(res, ins)
+	}
+	
+	return http.StatusOK, res, nil
+}
+
 //自分が提示した雇用情報を全て表示
 func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())

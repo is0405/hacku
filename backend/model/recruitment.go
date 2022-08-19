@@ -12,6 +12,9 @@ type Recruitment struct {
 	FinishRecruitmentPeriod    string `db:"finish_recruitment_period" json:"finishRecruitmentPeriod"`
 	StartImplementationPeriod  string `db:"start_implementation_period" json:"startImplementationPeriod"`
 	FinishImplementationPeriod string `db:"finish_implementation_period" json:"finishImplementationPeriod"`
+	Gender           int    `db:"gender" json:"gender"`
+	MaxAge           int    `db:"max_age" json:"maxAge"`
+	MinAge           int    `db:"min_age" json:"minAge"`
 	Title            string `db:"title" json:"title"`
 	UpdatedAt        string `db:"update_at" json:"updatedAt"`
 }
