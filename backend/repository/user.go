@@ -99,3 +99,30 @@ func RemoveSubUserByDate(db *sqlx.DB) (sql.Result, error) {
 DELETE FROM sub_user WHERE ? < created_at;
 `, date);
 }
+
+
+func GetFavoriteRecruitementList(db *sqlx.DB, uid int) ([]int, error) {
+	a := make([]int, 0)
+	if err := db.Select(&a, `
+SELECT recruitment_id 
+FROM favoriteList
+WHERE user_id = ?;`, uid);
+	err != nil {
+		return nil, err
+	}
+	
+	return a, nil
+}
+
+func CreateFavorite(db *sqlx.DB, uid int, rid int) (sql.Result, error) {
+	return db.Exec(`
+INSERT INTO favoriteList (user_id, recruitment_id)
+VALUES (?, ?)
+`, uid, rid);
+}
+
+func DeleteFavorite(db *sqlx.DB, uid int, rid int) (sql.Result, error) {
+	return db.Exec(`
+DELETE FROM favoriteList WHERE user_id = ? && recruitment_id = ?;
+`, uid, rid);
+}

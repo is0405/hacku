@@ -10,5 +10,6 @@ type User struct {
 	Password  string `db:"password" json:"password"`
 	Mail      string `db:"mail" json:"mail"`
 	Name      string `db:"name" json:"name"`
+	FavoriteRecruitementList  []int  `json:"favoriteRecruitementList"`
 	UpdatedAt string `db:"updated_at" json:"updatedAt"`
 }

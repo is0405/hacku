@@ -114,6 +114,48 @@ func (a *User) UpdateUser(mu *model.User) (int64, error) {
 	return createdId, nil
 }
 
+func (a *User) CreateFavoriteRecruitmentList(uid int, rid int) (int64, error) {
+	var createdId int64
+	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
+	
+		_, err := repository.CreateFavorite(a.db, uid, rid)	
+		if err != nil {
+			return err
+		}
+		
+		if err := tx.Commit(); err != nil {
+			return err
+		}
+		
+		createdId = 0
+		return err
+	}); err != nil {
+		return 0, errors.Wrap(err, "failed auth insert transaction")
+	}
+	return createdId, nil
+}
+
+func (a *User) DeleteFavoriteRecruitmentList(uid int, rid int) (int64, error) {
+	var createdId int64
+	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
+	
+		_, err := repository.DeleteFavorite(a.db, uid, rid)	
+		if err != nil {
+			return err
+		}
+		
+		if err := tx.Commit(); err != nil {
+			return err
+		}
+		
+		createdId = 0
+		return err
+	}); err != nil {
+		return 0, errors.Wrap(err, "failed auth insert transaction")
+	}
+	return createdId, nil
+}
+
 func (a *User) DeleteUser(sid int) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {

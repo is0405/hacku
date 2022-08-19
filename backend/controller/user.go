@@ -35,7 +35,12 @@ func (a *User) GetUser(_ http.ResponseWriter, r *http.Request) (int, interface{}
 		return http.StatusInternalServerError, nil, err
 	}
 
-	res, err := repository.GetUser(a.db, getc.UserId)
+	res, err := repository.GetUser(a.db, getc.UserId);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	res.FavoriteRecruitementList, err = repository.GetFavoriteRecruitementList(a.db, getc.UserId);
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -165,6 +170,28 @@ func (a *User) UpdateUser(_ http.ResponseWriter, r *http.Request) (int, interfac
 	return http.StatusOK, res, nil
 }
 
+func (a *User) CreateFavoriteRecruitmentList(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+
+	getc, err := httputil.GetClaimsFromContext(r.Context())
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	var rid int;
+	err = json.NewDecoder(r.Body).Decode(rid);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	UserService := service.NewUser(a.db)
+	_, err = UserService.CreateFavoriteRecruitmentList(getc.UserId, rid)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	return http.StatusOK, nil, nil
+}
+
 func (a *User) DeleteUser(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
@@ -173,6 +200,27 @@ func (a *User) DeleteUser(_ http.ResponseWriter, r *http.Request) (int, interfac
 
 	UserService := service.NewUser(a.db)
 	_, err = UserService.DeleteUser(getc.UserId)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
+	return http.StatusOK, nil, nil
+}
+
+func (a *User) DeleteFavoriteRecruitmentList(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	getc, err := httputil.GetClaimsFromContext(r.Context())
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	var rid int;
+	err = json.NewDecoder(r.Body).Decode(rid);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
+	UserService := service.NewUser(a.db)
+	_, err = UserService.DeleteFavoriteRecruitmentList(getc.UserId, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}

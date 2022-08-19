@@ -101,6 +101,8 @@ func (s *Server) Route() *mux.Router {
 	r.Methods(http.MethodPatch).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.UpdateUser}))
 	r.Methods(http.MethodDelete).Path("/users").Handler(authChain.Then(AppHandler{UserControlloer.DeleteUser}))
 	r.Methods(http.MethodPost).Path("/users/create").Handler(commonChain.Then(AppHandler{UserControlloer.CreateUser}))
+	r.Methods(http.MethodPost).Path("/users/favorite").Handler(commonChain.Then(AppHandler{UserControlloer.CreateFavoriteRecruitmentList}))
+	r.Methods(http.MethodDelete).Path("/users/favorite").Handler(commonChain.Then(AppHandler{UserControlloer.DeleteFavoriteRecruitmentList}))
 	// r.Methods(http.MethodGet).Path("/users-sub").Handler(commonChain.Then(AppHandler{UserControlloer.GetSubUser}))
 
 	//雇用情報
