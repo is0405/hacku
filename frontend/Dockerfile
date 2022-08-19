@@ -8,5 +8,6 @@ COPY package.json ./
 COPY package-lock.json ./
 
 RUN npm install 
+RUN npm install --save --legacy-peer-deps typescript ts-node ts-node-dev
 
 COPY . .

@@ -1,0 +1,140 @@
+.background_home{
+  background-color: rgb(67, 67, 67);
+  width: 100vw;
+  height: 100vh;
+}
+
+.topDiv_home{
+  width: 100vw;
+  height: 40vh;
+  display: flex;
+}
+.topLeft_home{
+  height: 40vh;
+  width: 65vw
+}
+.topRight_home{
+  height: 40vh;
+  width: 35vw
+}
+.systemImage_home{
+  width: 40vh;
+  height: 40vh;
+}
+.divFlex_home{
+  display: flex;
+}
+.subtitle_home{
+  width: 20vw;
+  height: 5vh;
+  color: rgb(255, 255, 255);
+  font-size: 200%;
+  margin-left: 5vw;
+  padding-top: 10vh;
+  border-bottom: solid 3px rgb(101, 101, 101);
+}
+.firstTitle_home{
+  width: min-content;
+  height: 10vh;
+  color: rgb(255, 255, 255);
+  font-size: 450%;
+  margin-left: 5vw;
+  padding-top: 2vh;
+}
+.firstTitle_home::first-letter{
+  color: rgb(230, 147, 38);
+  font-weight: bold;
+}
+.title_home{
+  width: min-content;
+  height: 10vh;
+  color: rgb(255, 255, 255);
+  font-size: 450%;
+  margin-left: 1vw;
+  padding-top: 2vh;
+}
+.title_home::first-letter{
+  color: rgb(230, 147, 38);
+  font-weight: bold;
+}
+.buttonDiv_home{
+  display: flex;
+  margin-top: 6vh;
+  height: 4vh;
+  width: 20vw;
+  margin-left: 2vw;
+}
+.margin_home{
+  width: 1vw;
+}
+
+
+.intro_home{
+  width: 24vw;
+  height: 5vh;
+  color: rgb(255, 255, 255);
+  font-size: 200%;
+  margin-left: 5vw;
+  border-bottom: solid 3px rgb(101, 101, 101);
+  margin-bottom: 3vh;
+}
+
+.bottomLeft_home{
+  margin-left: 5vw;
+}
+
+.image_home{
+  width: 5vh;
+  height: 5vh;
+  margin-top: 2vh;
+}
+.opinion_home{
+  width: 44vw;
+  height: 6vh;
+  margin-left: 1vw;
+  margin-top: 2.5vh;
+  padding-top: auto;
+  padding-bottom: auto;
+  font-size: 140%;
+  color: white;
+}
+
+.introText_home{
+  font-size: 140%;
+  color: white;
+  font-weight: 500;
+}
+
+/* .recommend_home{
+  width: 100vw;
+  height: 5vh;
+  color: rgb(255, 255, 255);
+  font-size: 300%;
+  margin-top: 5vh;
+  text-align: center;
+  color: rgb(230, 147, 38);
+  font-weight: bolder;
+} */
+
+.hukidashi_home{
+  width: 100%;
+  height: 100%;
+}
+
+.bottomImage{
+  width: 40vw;
+  height: 20vh;
+  margin-left: 30vw;
+  position: relative;
+}
+
+.recommend_home{
+  position: absolute;
+  top: 6vh;
+  color:  rgb(230, 147, 38);
+  width: 40vw;
+  height: 20vh;
+  font-size: 300%;
+  text-align: center;
+  font-weight: bold;
+}

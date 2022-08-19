@@ -1,0 +1,21 @@
+.mainDiv_request{
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+
+.title_request{
+  margin-top: 1vh;
+}
+
+.input_request{
+  margin-top: 2vh;
+}
+
+.margin_request{
+  margin-top: 2vh;
+}
+
+.termsText_request{
+  margin-top: 3vh;
+}
