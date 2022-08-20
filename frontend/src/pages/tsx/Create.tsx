@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import CreateIcon from '@mui/icons-material/Create';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import "../css/Create.css";
+import { useCookies } from "react-cookie";
 
 interface State {
   name: string,
@@ -32,6 +33,7 @@ interface BtnState {
 }
 
 const Create= () => {
+  const setCookie = useCookies()[1];
   const [values, setValues] = useState<State>({
     name: "",
     mailaddress: "",
@@ -137,7 +139,7 @@ const Create= () => {
 
   const CreateAcount = () => {
     //アカウント登録のAPI
-    
+    setCookie("token","999")
   }
 
   return (

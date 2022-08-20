@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import '../css/Card.css';
 
@@ -44,24 +44,21 @@ interface State {
 
 export default function RecipeReviewCard(props:{data:State}) {
   const [expanded, setExpanded] = React.useState(false);
-  const [favo, setFavo] = React.useState("default");
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const clickFavoriteBtn = () => {
-    if (favo==="default") {
-      setFavo("error");
-    } else {
-      setFavo("default");
-    }
+  const deleteBtn = () => {
+    
   }
 
   return (
     <Card sx={{ maxWidth: 500}} className="card_card">
       <CardHeader
-        avatar={<Avatar sx={{ bgcolor: orange[400] }} aria-label="recipe">{props.data.faculty}</Avatar>} title={props.data.name} subheader={props.data.date}/>
+        avatar={<Avatar sx={{ bgcolor: orange[400] }} aria-label="recipe">{props.data.faculty}</Avatar>}
+        action={<IconButton aria-label="delete" onClick={deleteBtn}><DeleteOutlineIcon /></IconButton>}
+        title={props.data.name} subheader={props.data.date}/>
       <CardContent>
         <Typography variant="body1" color="text.secondary">
         {props.data.title}<br/>
@@ -71,9 +68,9 @@ export default function RecipeReviewCard(props:{data:State}) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" id="favorite" color= {favo==="error" ? "error": "default"} onClick={clickFavoriteBtn}>
-          <FavoriteIcon />
-        </IconButton>
+        {/* <IconButton aria-label="add to favorites" id="favorite" onClick={deleteBtn}>
+          <DeleteOutlineIcon />
+        </IconButton> */}
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more"><ExpandMoreIcon /></ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

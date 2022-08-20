@@ -143,7 +143,7 @@ const Request = () => {
         </div>
         <div className='input_request'>
           <Box component="form" sx={{'& > :not(style)': { m: 0, width: '30ch' },}} noValidate autoComplete="on">
-            <TextField error={bools.period} id="outlined-basic" label="期間" variant="outlined" onChange={handleChange('period')}/>
+            <TextField error={bools.period} id="outlined-basic" label="所要時間" variant="outlined" onChange={handleChange('period')}/>
           </Box>
         </div>
         <div className='input_request'>

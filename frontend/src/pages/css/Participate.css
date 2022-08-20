@@ -1,0 +1,19 @@
+.cardArea_participate{
+  width: 100vw;
+}
+
+.cardArea_participate *{
+  margin-left: auto;
+  margin-right: auto;
+  /* padding-top: 3vh; */
+}
+
+.text_participate{
+  text-align: center;
+  font-size: 120%;
+  color: rgb(50, 50, 50);
+}
+
+.input_participate{
+  text-align: center;
+}

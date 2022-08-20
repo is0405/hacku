@@ -10,6 +10,7 @@ import PanToolIcon from '@mui/icons-material/PanTool';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { useLocation } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 import '../css/Navigation.css';
 
@@ -18,6 +19,7 @@ interface State {
 }
 
 const Nabigation = () => {
+  const removeCookie = useCookies()[2];
   const rawState:any = useLocation().state;
   let receiveState:State = {menuIndex:0}
   if(rawState != null){
@@ -29,6 +31,10 @@ const Nabigation = () => {
   }
   const [value, setValue] = React.useState(receiveState.menuIndex);
   const userWidth = document.body.offsetWidth;
+
+  const signOut = () => {
+    removeCookie("token");
+  }
 
   return (
     <>
@@ -42,7 +48,7 @@ const Nabigation = () => {
           <BottomNavigationAction label="マイページ" icon={<PersonIcon />} component={Link} to="/mypage" state = {{menuIndex:0}}/>
           <BottomNavigationAction label="申請" icon={<CreateIcon />} component={Link} to="/request" state = {{menuIndex:1}}/>
           <BottomNavigationAction label="参加" icon={<PanToolIcon />} component={Link} to="/participate" state = {{menuIndex:2}}/>
-          <BottomNavigationAction label="サインアウト" icon={<ExitToAppIcon/>} component={Link} to="/" />
+          <BottomNavigationAction onClick={signOut} label="サインアウト" icon={<ExitToAppIcon/>} component={Link} to="/" />
         </BottomNavigation>
       </Box>
     </>

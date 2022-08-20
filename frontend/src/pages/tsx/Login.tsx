@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import {Link} from 'react-router-dom';
@@ -12,6 +12,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useCookies } from "react-cookie";
+import {useNavigate} from "react-router-dom"
 
 interface State {
   mailaddress: string;
@@ -20,6 +22,8 @@ interface State {
 }
 
 const Login = () => {
+  const navigation = useNavigate();
+  const setCookie = useCookies()[1];
   const [values, setValues] = React.useState<State>({
     mailaddress: '',
     password: '',
@@ -41,6 +45,17 @@ const Login = () => {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
+  const LoginCheck = () => {
+    const loginSuccess = true;
+    if(loginSuccess){
+      setCookie("token","999")
+      navigation('/mypage');
+    }
+    else{
+      alert("メールアドレスとパスワードが違います")
+    }
+  }
 
   return (
     <div className='mainDiv_login'>
@@ -75,7 +90,8 @@ const Login = () => {
           </FormControl>
       </div>
       <div className='margin_login'/>
-      <Button onClick={()=>console.log(values)} variant="contained" startIcon={<LoginIcon />} component={Link} to="/mypage">
+      {/* <Button onClick={()=>LoginCheck()} variant="contained" startIcon={<LoginIcon />} component={Link} to="/mypage"> */}
+      <Button onClick={()=>LoginCheck()} variant="contained" startIcon={<LoginIcon />}>
         ログイン
       </Button>
       <div className='margin_login'/>
