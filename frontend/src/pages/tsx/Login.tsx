@@ -14,7 +14,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useCookies } from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import { ApiPost } from "./../../lib"
+import requests from "../../lib.tsx";
 
 interface State {
   mailaddress: string;
@@ -48,19 +48,16 @@ const Login = () => {
   };
 
   const LoginCheck = () => {
-    const res = ApiPost("/login", values);
-    var loginSuccess = false;
-    if(res != null){
-      loginSuccess = true;
-    }
-    
-    if(loginSuccess){
-      setCookie("token",res.token)
+
+    axis.post(requests.InsertSampleData, ...values)
+    .then((response) => {
+      setCookie("token",response.token)
       navigation('/mypage');
-    }
-    else{
-      alert("メールアドレスとパスワードが違います")
-    }
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("メールアドレスとパスワードが違います");
+    });
   }
 
   return (
