@@ -1,0 +1,17 @@
+.mainDiv_login{
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+
+.title_login{
+  margin-top: 12vh;
+}
+
+.input_login{
+  margin-top: 5vh;
+}
+
+.margin_login{
+  margin-top: 5vh;
+}

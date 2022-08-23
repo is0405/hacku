@@ -1,0 +1,22 @@
+.allDiv_mypage{
+  display: flex;
+  width: 100vw;
+}
+
+.left_mypage{
+  width: 50vw;
+  margin-top: 2vh;
+  margin-left: 10%;
+}
+.right_mypage{
+  width: 50vw;
+  margin-top: 2vh;
+  margin-left: 10%;
+}
+
+.text_mypage{
+  font-size: 180%;
+  color: rgb(50, 50, 50);
+  border-bottom: solid 1px rgb(50, 50, 50);
+  width: 9vw;
+}
