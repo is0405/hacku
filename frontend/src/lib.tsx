@@ -1,4 +1,4 @@
-const BaseURL = http://localhost:10001
+const BaseURL = "http://localhost:10001";
 const requests = {
   Login: BaseURL+'/login,  // POST
 };

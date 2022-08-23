@@ -14,7 +14,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useCookies } from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import requests from "../../lib.tsx";
+import requests from "../../lib";
 
 interface State {
   mailaddress: string;
