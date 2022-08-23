@@ -37,14 +37,14 @@ services:
     build:
       context: ./frontend
     container_name: hacku-frontend
-    command: npm start
+    command: "react-scripts start"
     ports:
       - 3000:3000
     environment:
       - BACKEND_API_BASE=http://localhost:10001
     volumes:
-      - ./frontend:/app
       - node_modules-volume:/app/node_modules
+      - ./frontend:/app
     working_dir: /app
 
 volumes:

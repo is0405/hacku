@@ -13,7 +13,8 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useCookies } from "react-cookie";
-import {useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom";
+import { ApiPost } from "./../../lib"
 
 interface State {
   mailaddress: string;
@@ -47,9 +48,14 @@ const Login = () => {
   };
 
   const LoginCheck = () => {
-    const loginSuccess = true;
+    const res = ApiPost("/login", values);
+    var loginSuccess = false;
+    if(res != null){
+      loginSuccess = true;
+    }
+    
     if(loginSuccess){
-      setCookie("token","999")
+      setCookie("token",res.token)
       navigation('/mypage');
     }
     else{

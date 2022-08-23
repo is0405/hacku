@@ -5,6 +5,7 @@ import (
 	// "errors"
 	"net/http"
 	"time"
+	"fmt"
 
 	// "github.com/is0405/hacku/httputil"
 	"github.com/is0405/hacku/model"
@@ -35,6 +36,9 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 		return http.StatusBadRequest, nil, err
 	}
 
+	fmt.Println(lb.Mail);
+	fmt.Println(lb.Password);
+	
 	if !util.MailCheck(lb.Mail) {
 		return http.StatusBadRequest, nil, err
 	}
