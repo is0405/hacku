@@ -15,6 +15,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useCookies } from "react-cookie";
 import {useNavigate} from "react-router-dom";
 import requests from "../../lib";
+import axios from 'axios';
 
 interface State {
   mailaddress: string;
@@ -48,10 +49,17 @@ const Login = () => {
   };
 
   const LoginCheck = () => {
-
-    axis.post(requests.InsertSampleData, ...values)
+      axios({
+          method: 'post',
+          url: requests.Login,
+          data: {
+              mailaddress: values.mailaddress,
+              password: values.password,
+          },
+          withCredentials: true
+      })
     .then((response) => {
-      setCookie("token",response.token)
+      setCookie("token", response.data["token"])
       navigation('/mypage');
     })
     .catch((error) => {
