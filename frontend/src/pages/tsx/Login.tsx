@@ -56,7 +56,9 @@ const Login = () => {
               mailaddress: values.mailaddress,
               password: values.password,
           },
-          withCredentials: true
+          headers: {
+           'Content-Type': 'application/x-www-form-urlencoded',
+          }
       })
     .then((response) => {
       setCookie("token", response.data["token"])

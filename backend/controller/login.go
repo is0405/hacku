@@ -35,15 +35,14 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-
-	fmt.Println(lb.Mail);
-	fmt.Println(lb.Password);
 	
 	if !util.MailCheck(lb.Mail) {
 		return http.StatusBadRequest, nil, err
 	}
 
 	lb.Password = util.HashGenerateSha256(lb.Password)
+	fmt.Println(lb.Mail)
+	fmt.Println(lb.Password)
 	userId, err := repository.CheckLogin(a.db, lb)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
