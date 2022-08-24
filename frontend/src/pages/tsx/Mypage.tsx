@@ -16,25 +16,21 @@ const Board = () => {
     minAge: 0,
     maxAge: 0,
   };
-  const List = [data,data,data]
+  const List = [data,data,data,data,data,data]
   return (
     <>
       <Navigation/>
       <div className='allDiv_mypage'>
         <div className='left_mypage'>
           <div className='text_mypage'>自分の投稿</div>
-          <div id='myCard_mypage'>
+          <div className='myCard_mypage'>
             {List.map((d,index) => {return <Card data={d} key={index}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
           </div>
         </div>
         <div className='right_mypage'>
-          <div className='text_mypage'>お気に入り</div>
-          <div id='favoCard_mypage'>
+          <div className='text_mypage'>参加する実験</div>
+          <div className='favoCard_mypage'>
             {List.map((d,index) => {return <Card data={d} key={index}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
           </div>
         </div>
       </div>

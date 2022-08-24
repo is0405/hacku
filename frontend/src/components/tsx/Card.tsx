@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import PanToolIcon from '@mui/icons-material/PanTool';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import '../css/Card.css';
 
@@ -52,7 +52,7 @@ export default function RecipeReviewCard(props:{data:State}) {
 
   const clickFavoriteBtn = () => {
     if (favo==="default") {
-      setFavo("error");
+      setFavo("primary");
     } else {
       setFavo("default");
     }
@@ -71,8 +71,8 @@ export default function RecipeReviewCard(props:{data:State}) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" id="favorite" color= {favo==="error" ? "error": "default"} onClick={clickFavoriteBtn}>
-          <FavoriteIcon />
+        <IconButton aria-label="add to favorites" id="favorite" color= {favo==="primary" ? "primary": "default"} onClick={clickFavoriteBtn}>
+          <PanToolIcon />
         </IconButton>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more"><ExpandMoreIcon /></ExpandMore>
       </CardActions>

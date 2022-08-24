@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import '../css/Card.css';
+import '../css/Card2.css';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -54,7 +54,7 @@ export default function RecipeReviewCard(props:{data:State}) {
   }
 
   return (
-    <Card sx={{ maxWidth: 500}} className="card_card">
+    <Card sx={{ maxWidth: 500}} className="card_card2">
       <CardHeader
         avatar={<Avatar sx={{ bgcolor: orange[400] }} aria-label="recipe">{props.data.faculty}</Avatar>}
         action={<IconButton aria-label="delete" onClick={deleteBtn}><DeleteOutlineIcon /></IconButton>}
