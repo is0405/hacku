@@ -2,12 +2,6 @@
   width: 100vw;
 }
 
-.cardArea_participate *{
-  margin-left: auto;
-  margin-right: auto;
-  /* padding-top: 3vh; */
-}
-
 .text_participate{
   text-align: center;
   font-size: 120%;
@@ -16,4 +10,12 @@
 
 .input_participate{
   text-align: center;
+}
+
+.cardArea_participate{
+  display: flex;
+  width: 50vw;
+  margin-left: 25vw;
+  margin-right: 25vw;
+  flex-wrap:wrap;
 }

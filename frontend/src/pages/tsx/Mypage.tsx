@@ -20,7 +20,6 @@ const Board = () => {
         setPartiDatas(res.data);
     })
   },[])
-  
   return (
     <>
       <Navigation/>
