@@ -29,6 +29,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 interface State {
+  recruitmentId: number,
   name: string,
   faculty: string,
   date: string,
@@ -40,6 +41,7 @@ interface State {
   sex: number;
   minAge: number;
   maxAge: number;
+  nowSubjects: number
 }
 
 export default function RecipeReviewCard(props:{data:State}) {
@@ -81,8 +83,8 @@ export default function RecipeReviewCard(props:{data:State}) {
             {props.data.content}
           </Typography>
           <Typography paragraph>
-            最大被験者数<br/>
-            {props.data.maxSubjects}
+            被験者数<br/>
+            {props.data.nowSubjects}/{props.data.maxSubjects}
           </Typography>
         </CardContent>
       </Collapse>

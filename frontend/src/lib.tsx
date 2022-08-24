@@ -6,6 +6,7 @@ const requests = {
   Rec: BaseURL+'/recruitment',  // POST ,GET, PATCH, DELETE
   RecMine: BaseURL+'/recruitment/all/mine',  // GET
   RecOther: BaseURL+'/recruitment/all/other',  // GET
+  PartiMine: BaseURL+'/recruitment/all/participation', //GET
 };
 
 export default requests;

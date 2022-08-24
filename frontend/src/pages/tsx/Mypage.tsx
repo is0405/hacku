@@ -2,21 +2,25 @@ import Navigation from '../../components/tsx/Navigation';
 import Card from '../../components/tsx/Card2';
 import "../css/Mypage.css";
 
+import React, { useState, useEffect } from "react";
+import requests from "../../lib";
+import axios from 'axios';
+import { useCookies } from "react-cookie";
+
 const Board = () => {
-  const data = {
-    name:"渡邊将太",
-    faculty: "情理",
-    date:"2022/8/20",
-    title: 'Sota実験',
-    content: 'ロボットを使って会話をしていただきます。使用時間は6時間でだれでも参加できます。',
-    maxSubjects: 0,
-    period: "2時間",
-    reward: "2000円",
-    sex: 0,
-    minAge: 0,
-    maxAge: 0,
-  };
-  const List = [data,data,data]
+  const setCookie = useCookies()[1];
+
+  const [recruitDatas, setRecDatas] = useState([]);
+  const [partiDatas, setPartiDatas] = useState([]);
+  useEffect( () => {
+    axios.get(requests.RecMine, { headers: {"Authorization" : `Bearer ${setCookie}`} }).then((res)=> {
+       setRecDatas(res.data);
+     })
+    axios.get(requests.PartiMine, { headers: {"Authorization" : `Bearer ${setCookie}`} }).then((res)=> {
+       setPartiDatas(res.data);
+     })
+   },[])
+  
   return (
     <>
       <Navigation/>
@@ -24,15 +28,16 @@ const Board = () => {
         <div className='left_mypage'>
           <div className='text_mypage'>自分の投稿</div>
           <div id='myCard_mypage'>
-            {List.map((d,index) => {return <Card data={d} key={index}/>})}
+            {recruitDatas.map((d: any) => {
+              return <Card data={d} key={d.recruitmentId}/>})}
             {/* <Card data={data}/>
             <Card data={data}/> */}
           </div>
         </div>
         <div className='right_mypage'>
-          <div className='text_mypage'>お気に入り</div>
+          <div className='text_mypage'>参加する実験</div>
           <div id='favoCard_mypage'>
-            {List.map((d,index) => {return <Card data={d} key={index}/>})}
+            {partiDatas.map((d:any) => {return <Card data={d} key={d.recruitmentId}/>})}
             {/* <Card data={data}/>
             <Card data={data}/> */}
           </div>
