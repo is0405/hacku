@@ -24,8 +24,19 @@ func NewRecruitment(db *sqlx.DB) *Recruitment {
 }
 
 type RecruitmentResponse struct {
-	Recruitment      *model.Recruitment  `json:"recruitment"`
-	NowParticipation int           `json:"nowparticipation"`
+	Id               int    `json:"recruitment_id"`
+	Name             string `json:"name"`
+	Faculty          int    `json:"faculty"`
+	UpadateAt        string `json:"date"`
+	Title            string `json:"title"`
+	Content          string `json:"content"`
+	MaxSubjects      int    `json:"maxSubjects"`
+	Period           string `json:"period"`
+	Reward           string `json:"reward"`
+	Sex              int    `json:"sex"`
+	MinAge           int    `json:"minAge"`
+	MaxAge           int    `json:"maxAge"`
+	NowParticipation int    `json:"nowparticipation"`
 }
 
 func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -67,24 +78,42 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 		return http.StatusInternalServerError, nil, err
 	}
 
-	aid, err := util.URLToInt(r)
+	rid, err := util.URLToInt(r)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 
-	recruitment, err := repository.GetRecruitmentFromRId(a.db, aid)
+	recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	cnt, err := repository.CountUidFromRid(a.db, aid)
+	//何人参加しているか
+	cnt, err := repository.CountUidFromRid(a.db, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
+	//雇用主の情報をとってくる
+	user, err := repository.GetUser(a.db, recruitment.SubmitId)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
 	res := RecruitmentResponse{
-		Recruitment: recruitment,
-		NowParticipation: cnt,
+		Id: recruitment.Id,
+		Name: user.Name,
+	    Faculty: user.Faculty, 
+	    UpadateAt: recruitment.UpdatedAt,
+	    Title: recruitment.Title,
+	    Content: recruitment.Contents,
+	    MaxSubjects: recruitment.MaxParticipation,
+	    Period: recruitment.StartImplementationPeriod+"~"+recruitment.FinishImplementationPeriod,
+	    Reward: recruitment.Reward,
+	    Sex: recruitment.Gender,
+	    MinAge: recruitment.MinAge,
+	    MaxAge: recruitment.MaxAge,
+	    NowParticipation:cnt,
 	}
 
 	return http.StatusOK, res, nil
@@ -102,16 +131,32 @@ func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request
 		return http.StatusInternalServerError, nil, err
 	}
 
+	user, err := repository.GetUser(a.db, getc.UserId)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
 	var res []RecruitmentResponse
-	for _, v := range recruitments {
-		cnt, err := repository.CountUidFromRid(a.db, v.Id)
+	for _, recruitment := range recruitments {
+		cnt, err := repository.CountUidFromRid(a.db, recruitment.Id)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
 
 		ins := RecruitmentResponse{
-			Recruitment: &v,
-			NowParticipation: cnt,
+			Id: recruitment.Id,
+			Name: user.Name,
+			Faculty: user.Faculty, 
+			UpadateAt: recruitment.UpdatedAt,
+			Title: recruitment.Title,
+			Content: recruitment.Contents,
+			MaxSubjects: recruitment.MaxParticipation,
+			Period: recruitment.StartImplementationPeriod+"~"+recruitment.FinishImplementationPeriod,
+			Reward: recruitment.Reward,
+			Sex: recruitment.Gender,
+			MinAge: recruitment.MinAge,
+			MaxAge: recruitment.MaxAge,
+			NowParticipation:cnt,
 		}
 		
 		res = append(res, ins)
@@ -120,6 +165,7 @@ func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request
 	return http.StatusOK, res, nil
 }
 
+//自分以外の雇用情報表示
 func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
@@ -132,15 +178,84 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 	}
 
 	var res []RecruitmentResponse
-	for _, v := range recruitments {
-		cnt, err := repository.CountUidFromRid(a.db, v.Id)
+	for _, recruitment := range recruitments {
+		cnt, err := repository.CountUidFromRid(a.db, recruitment.Id)
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
 
+		//雇用主の情報をとってくる
+		user, err := repository.GetUser(a.db, recruitment.SubmitId)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+	
 		ins := RecruitmentResponse{
-			Recruitment: &v,
-			NowParticipation: cnt,
+			Id: recruitment.Id,
+			Name: user.Name,
+			Faculty: user.Faculty, 
+			UpadateAt: recruitment.UpdatedAt,
+			Title: recruitment.Title,
+			Content: recruitment.Contents,
+			MaxSubjects: recruitment.MaxParticipation,
+			Period: recruitment.StartImplementationPeriod+"~"+recruitment.FinishImplementationPeriod,
+			Reward: recruitment.Reward,
+			Sex: recruitment.Gender,
+			MinAge: recruitment.MinAge,
+			MaxAge: recruitment.MaxAge,
+			NowParticipation:cnt,
+		}
+		
+		res = append(res, ins)
+	}
+
+	return http.StatusOK, res, nil
+}
+
+//自分が参加する雇用情報を全て表示
+func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	getc, err := httputil.GetClaimsFromContext(r.Context())
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	rid_list, err := repository.GetAllRidFromUid(a.db, getc.UserId)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}	
+
+	var res []RecruitmentResponse
+	for _, rid := range rid_list {
+		recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+		
+		cnt, err := repository.CountUidFromRid(a.db, recruitment.Id)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+
+		//雇用主の情報をとってくる
+		user, err := repository.GetUser(a.db, recruitment.SubmitId)
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+	
+		ins := RecruitmentResponse{
+			Id: recruitment.Id,
+			Name: user.Name,
+			Faculty: user.Faculty, 
+			UpadateAt: recruitment.UpdatedAt,
+			Title: recruitment.Title,
+			Content: recruitment.Contents,
+			MaxSubjects: recruitment.MaxParticipation,
+			Period: recruitment.StartImplementationPeriod+"~"+recruitment.FinishImplementationPeriod,
+			Reward: recruitment.Reward,
+			Sex: recruitment.Gender,
+			MinAge: recruitment.MinAge,
+			MaxAge: recruitment.MaxAge,
+			NowParticipation:cnt,
 		}
 		
 		res = append(res, ins)
@@ -215,6 +330,7 @@ func (a *Recruitment) DeleteRecruitment(_ http.ResponseWriter, r *http.Request) 
 	return http.StatusOK, nil, nil
 }
 
+//雇用者が参加者の情報をとってくる
 func (a *Recruitment) GetParticipation(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 
 	getc, err := httputil.GetClaimsFromContext(r.Context())
