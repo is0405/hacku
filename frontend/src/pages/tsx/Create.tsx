@@ -9,7 +9,10 @@ import FormControl from '@mui/material/FormControl';
 import CreateIcon from '@mui/icons-material/Create';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import "../css/Create.css";
+import {useNavigate} from "react-router-dom";
 import { useCookies } from "react-cookie";
+import requests from "../../lib";
+import axios from 'axios';
 
 interface State {
   name: string,
@@ -33,6 +36,7 @@ interface BtnState {
 }
 
 const Create= () => {
+  const navigation = useNavigate();
   const setCookie = useCookies()[1];
   const [values, setValues] = useState<State>({
     name: "",
@@ -138,8 +142,37 @@ const Create= () => {
   };
 
   const CreateAcount = () => {
-    //アカウント登録のAPI
-    setCookie("token","999")
+    axios({
+      method: 'post',
+      url: requests.Create,
+      data: values,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    })
+    .then((response) => {
+      axios({
+        method: 'post',
+        url: requests.Login,
+        data: {
+          mailaddress: values.mailaddress,
+          password: values.password,
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      })
+      .then((response) => {
+        setCookie("token", response.data["token"]);
+        navigation('/mypage');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   return (
