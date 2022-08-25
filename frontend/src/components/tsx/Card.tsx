@@ -29,17 +29,20 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 interface State {
+  recruitmentId: number,
   name: string,
   faculty: string,
   date: string,
   title: string;
   content: string;
   maxSubjects: number;
+  conditions: string;
   period: string;
   reward: string;
   sex: number;
   minAge: number;
   maxAge: number;
+  nowSubjects: number
 }
 
 export default function RecipeReviewCard(props:{data:State}) {
@@ -67,7 +70,9 @@ export default function RecipeReviewCard(props:{data:State}) {
         {props.data.title}<br/>
         所用時間:{props.data.period}<br/>
         謝礼:{props.data.reward}<br/>
-        条件:{props.data.minAge}{props.data.maxAge}{props.data.sex}
+        条件(年齢):{props.data.minAge}歳から{props.data.maxAge}歳<br/>
+        条件(性別):{props.data.sex}<br/>
+        条件(その他):{props.data.conditions}<br/>
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -84,8 +89,8 @@ export default function RecipeReviewCard(props:{data:State}) {
             {props.data.content}
           </Typography>
           <Typography paragraph>
-            最大被験者数<br/>
-            {props.data.maxSubjects}
+            被験者数<br/>
+            {props.data.nowSubjects}/{props.data.maxSubjects}
           </Typography>
         </CardContent>
       </Collapse>

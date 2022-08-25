@@ -15,11 +15,20 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 }
 
 
-func GetOtherAllRecruitment(db *sqlx.DB, myId int) ([]model.Recruitment, error) {
+func GetOtherAllRecruitment(db *sqlx.DB, myId int, gender int, minAge int, maxAge int) ([]model.Recruitment, error) {
+
+	if gender == 0 {
+		gender = 1
+	}else if gender == 1 {
+		gender = 0
+	}else{
+		gender = 3
+	}
+	
 	a := make([]model.Recruitment, 0)
 	if err := db.Select(&a, `
-	SELECT * FROM recruitment WHERE submit_id != ?;
-	`, myId); err != nil {
+	SELECT * FROM recruitment WHERE submit_id != ? && gender != ? && min_age <= ? && ? <= max_age;
+	`, myId, gender, minAge, maxAge); err != nil {
 		return nil, err
 	}
 	

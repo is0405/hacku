@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 	// "fmt"
 
 	"github.com/is0405/hacku/httputil"
@@ -176,7 +177,23 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 		return http.StatusInternalServerError, nil, err
 	}
 
-	recruitments, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	query := r.URL.Query();
+	gender, err := strconv.Atoi(query["sex"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	minAge, err := strconv.Atoi(query["minAge"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	maxAge, err := strconv.Atoi(query["maxAge"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	recruitments, err := repository.GetOtherAllRecruitment(a.db, getc.UserId, gender, minAge, maxAge)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}

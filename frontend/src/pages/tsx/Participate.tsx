@@ -10,6 +10,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import "../css/Participate.css";
 
+import { useState, useEffect } from "react";
+import requests from "../../lib";
+import axios from 'axios';
+import { useCookies } from "react-cookie";
+
 interface State {
   sex: number;
   minAge: number;
@@ -17,25 +22,34 @@ interface State {
 }
 
 const Participate = () => {
+  const [cookies] = useCookies();
+  const accessToken = `Bearer ${cookies.token}`;
+  
+  const [partiDatas, setPartiDatas] = useState([]);
   const [values, setValues] = React.useState<State>({
-    sex: 0,
-    minAge: 0,
-    maxAge: 0
+    sex: 2,
+    minAge: 18,
+    maxAge: 60
   });
 
-  const data = {
-    name:"渡邊将太",
-    faculty: "情理",
-    date:"2022/8/20",
-    title: 'Sota実験',
-    content: 'ロボットを使って会話をしていただきます。使用時間は6時間でだれでも参加できます。',
-    maxSubjects: 0,
-    period: "2時間",
-    reward: "2000円",
-    sex: 0,
-    minAge: 0,
-    maxAge: 0
-  };
+  useEffect( () => {
+    const headers = {
+      Authorization: accessToken,
+    }
+    
+    axios({
+      method: 'get',
+      url: requests.RecOther,
+      params: values,
+      headers: headers
+      }).then((res)=> {
+       console.log("this");
+       setPartiDatas(res.data);
+     })
+     .catch((error) => {
+       console.log(error);
+    });
+   },[accessToken])
 
   const handleNumberChange =(prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: Number(event.target.value) });
@@ -44,7 +58,25 @@ const Participate = () => {
   const handleSelectChange = (prop: keyof State) => (event: SelectChangeEvent) => {
     setValues({ ...values, [prop]: Number(event.target.value)});
   };
-  const List = [data,data,data,data,data,data,data]
+
+  const SearchClick = () => {
+    const headers = {
+      Authorization: accessToken,
+    }
+    
+    axios({ 
+      method: 'get',
+      url: requests.RecOther,
+      params: values,
+      headers: headers
+      }).then((res)=> {
+       setPartiDatas(res.data);
+     })
+     .catch((error) => {
+       console.log(error);
+    });
+  };
+ 
   return (
     <>
       <Navigation/>
@@ -62,12 +94,13 @@ const Participate = () => {
             </FormControl>
             <TextField id="outlined-number" label="最小年齢" type="number" size='small' onChange={handleNumberChange("minAge")}/>
             <TextField id="outlined-number" label="最高年齢" type="number" size='small' onChange={handleNumberChange("maxAge")}/>
-            <Button variant="outlined" size="medium">検索</Button>
+            <Button onClick={()=>SearchClick()} variant="outlined" size="medium">検索</Button>
           </Box>
         </div>
 
       <div className='cardArea_participate'>
-        {List.map((d,index) => {return <Card data={d} key={index}/>})}
+        {partiDatas.map((d: any) => {
+           return <Card data={d} key={d.recruitmentId}/>})}
       </div>
     </>
   );
