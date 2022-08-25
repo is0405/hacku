@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"fmt"
+	"strconv"
+	// "fmt"
 
 	"github.com/is0405/hacku/httputil"
 	"github.com/is0405/hacku/model"
@@ -24,7 +25,7 @@ func NewRecruitment(db *sqlx.DB) *Recruitment {
 }
 
 type RecruitmentResponse struct {
-	Id               int    `json:"recruitment_id"`
+	Id               int    `json:"recruitmentId"`
 	Name             string `json:"name"`
 	Faculty          int    `json:"faculty"`
 	UpadateAt        string `json:"date"`
@@ -41,6 +42,7 @@ type RecruitmentResponse struct {
 }
 
 func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
@@ -52,7 +54,8 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-	
+
+
 	ma.SubmitId = getc.UserId
 	if ma.Conditions == "" {
 		ma.Conditions = "特になし"
@@ -68,7 +71,6 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 		return http.StatusInternalServerError, nil, err
 	}	
 
-	
 	return http.StatusOK, nil, nil
 }
 
@@ -175,7 +177,23 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 		return http.StatusInternalServerError, nil, err
 	}
 
-	recruitments, err := repository.GetMyAllRecruitment(a.db, getc.UserId)
+	query := r.URL.Query();
+	gender, err := strconv.Atoi(query["sex"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	minAge, err := strconv.Atoi(query["minAge"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	maxAge, err := strconv.Atoi(query["maxAge"][0]);
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	
+	recruitments, err := repository.GetOtherAllRecruitment(a.db, getc.UserId, gender, minAge, maxAge)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -219,7 +237,6 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 //自分が参加する雇用情報を全て表示
 func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	
-	fmt.Println(1)
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
@@ -231,7 +248,6 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 	}	
 
 	var res []RecruitmentResponse
-	fmt.Println(2)
 	for _, rid := range rid_list {
 		recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
 		if err != nil {
