@@ -221,18 +221,23 @@ const Create= () => {
             <MenuItem value={1}>産社</MenuItem>
             <MenuItem value={2}>国際</MenuItem>
             <MenuItem value={3}>文</MenuItem>
-            <MenuItem value={4}>言語・先端・映像</MenuItem>
-            <MenuItem value={5}>経済</MenuItem>
-            <MenuItem value={6}>スポーツ</MenuItem>
-            <MenuItem value={7}>食マネ</MenuItem>
-            <MenuItem value={8}>理工</MenuItem>
-            <MenuItem value={9}>情理</MenuItem>
-            <MenuItem value={10}>生命</MenuItem>
-            <MenuItem value={11}>薬</MenuItem>
-            <MenuItem value={12}>経営</MenuItem>
-            <MenuItem value={13}>政策</MenuItem>
-            <MenuItem value={14}>心理・グローバル・人間科学・テク</MenuItem>
-            <MenuItem value={15}>その他</MenuItem>
+            <MenuItem value={4}>言語</MenuItem>
+            <MenuItem value={5}>先端</MenuItem>
+            <MenuItem value={6}>映像</MenuItem>
+            <MenuItem value={7}>経済</MenuItem>
+            <MenuItem value={8}>スポーツ</MenuItem>
+            <MenuItem value={9}>食マネ</MenuItem>
+            <MenuItem value={10}>理工</MenuItem>
+            <MenuItem value={11}>情理</MenuItem>
+            <MenuItem value={12}>生命</MenuItem>
+            <MenuItem value={13}>薬</MenuItem>
+            <MenuItem value={14}>経営</MenuItem>
+            <MenuItem value={15}>政策</MenuItem>
+            <MenuItem value={16}>心理</MenuItem>
+            <MenuItem value={17}>グローバル</MenuItem>
+            <MenuItem value={18}>人間科学</MenuItem>
+            <MenuItem value={19}>テクノロジー</MenuItem>
+            <MenuItem value={20}>その他</MenuItem>
           </Select>
         </FormControl>
       </Box>
