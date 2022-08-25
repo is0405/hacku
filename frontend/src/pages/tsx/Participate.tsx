@@ -42,21 +42,23 @@ const Participate = () => {
       url: requests.RecOther,
       params: values,
       headers: headers
-      }).then((res)=> {
-       console.log("this");
-       let resDataList = res.data;
-       let validResDataList:any = []
-       resDataList.map((d: any) => {
-          if(d.maxSubjects>d.nowSubjects){
-            validResDataList.push(d)
-          }
-       })
-       setPartiDatas(validResDataList);
+    }).then((res)=> {
+       let resDataList:any = [];
+       if(Object.keys(res.data).length) {
+         resDataList = res.data;
+         let validResDataList:any = []
+         resDataList.map((d: any) => {
+           if(d.maxSubjects>d.nowSubjects){
+             validResDataList.push(d)
+           }
+         })
+         setPartiDatas(validResDataList);
+       }
      })
      .catch((error) => {
        console.log(error);
     });
-   },[accessToken])
+   },[accessToken, values])
 
   const handleNumberChange =(prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: Number(event.target.value) });
@@ -77,7 +79,9 @@ const Participate = () => {
       params: values,
       headers: headers
       }).then((res)=> {
-       setPartiDatas(res.data);
+        if(Object.keys(res.data).length) {
+          setPartiDatas(res.data);
+        }
      })
      .catch((error) => {
        console.log(error);
