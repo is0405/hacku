@@ -25,7 +25,9 @@ const Board = () => {
       url: requests.RecMine,
       headers: headers
       }).then((res)=> {
-       setRecDatas(res.data);
+       if(Object.keys(res.data).length) {
+         setRecDatas(res.data);
+       }
      })
      .catch((error) => {
        console.log(error);
@@ -34,7 +36,6 @@ const Board = () => {
       headers: headers
       }).then((res)=> {
        if(Object.keys(res.data).length) {
-         console.log("aaa");
          setPartiDatas(res.data);
        }
      }).catch((error) => {
