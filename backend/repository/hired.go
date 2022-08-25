@@ -40,3 +40,15 @@ func CountUidFromRid(db *sqlx.DB, aid int) (int, error) {
 	
 	return a, nil
 }
+
+
+func GetAllRidFromUid(db *sqlx.DB, uid int) ([]int, error) {
+	a := make([]int, 0)
+	if err := db.Select(&a, `
+	SELECT recruitment_id FROM participation WHERE user_id = ?;
+	`, uid); err != nil {
+		return nil, err
+	}
+	
+	return a, nil
+}

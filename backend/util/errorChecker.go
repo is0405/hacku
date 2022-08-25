@@ -3,6 +3,7 @@ package util
 import (
 	"regexp"
 	"strings"
+	// "fmt"
 	"github.com/is0405/hacku/model"
 )
 
@@ -64,26 +65,10 @@ func CheckRecruitment(ma *model.Recruitment) bool {
 		return false
 	}
 
-	if ma.StartRecruitmentPeriod == "" {
+	if ma.Period == "" {
 		return false
 	}
-	ma.StartRecruitmentPeriod = ReplaceString(ma.StartRecruitmentPeriod)
-
-	if ma.FinishRecruitmentPeriod == "" {
-		return false
-	}
-	ma.FinishRecruitmentPeriod = ReplaceString(ma.FinishRecruitmentPeriod)
-
-	if ma.StartImplementationPeriod == "" {
-		return false
-	}
-	ma.StartImplementationPeriod = ReplaceString(ma.StartImplementationPeriod)
-
-	if ma.FinishImplementationPeriod == "" {
-		return false
-	}
-	ma.FinishImplementationPeriod = ReplaceString(ma.FinishImplementationPeriod)
-
+	
 	if ma.Title == "" {
 		return false
 	}

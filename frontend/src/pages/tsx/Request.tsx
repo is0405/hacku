@@ -11,6 +11,11 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Navigation from '../../components/tsx/Navigation';
 import "../css/Request.css";
 
+import { useCookies } from "react-cookie";
+import requests from "../../lib";
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
 interface State {
   title: string;
   content: string;
@@ -20,6 +25,7 @@ interface State {
   sex: number;
   minAge: number;
   maxAge: number;
+  conditions: string;
 }
 interface Bool {
   title: boolean;
@@ -33,15 +39,20 @@ interface BtnState {
 }
 
 const Request = () => {
+  const navigation = useNavigate();
+  const [cookies] = useCookies();
+  const accessToken = `Bearer ${cookies.token}`;
+  
   const [values, setValues] = React.useState<State>({
     title: '',
     content: '',
     maxSubjects: 0,
     period: "",
     reward: "",
-    sex: 0,
-    minAge: 0,
-    maxAge: 0
+    sex: 2,
+    minAge: 18,
+    maxAge: 60,
+    conditions: '本大学に所属している学生',
   });
   const [bools, setBools] = useState<Bool>({
     title: false,
@@ -121,6 +132,38 @@ const Request = () => {
     setValues({ ...values, [prop]: Number(event.target.value)});
   };
 
+  const CreateRecruitment = () => {
+      const headers = {
+       Authorization: accessToken,
+      }
+    
+      axios({
+        method: 'post',
+        url: requests.Rec,
+        data: {
+          title: values.title,
+          content: values.content,
+          maxSubjects: values.maxSubjects,
+          period: values.period,
+          reward: values.reward,
+          sex: values.sex,
+          minAge: values.minAge,
+          maxAge: values.maxAge,
+          conditions: values.conditions
+        },
+        headers:headers
+      })
+      .then((response) => {
+    　  alert("登録完了しました");
+        navigation('/mypage');
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("登録に失敗しました");
+      });
+   };
+    
+
   return (
     <>
       <Navigation/>
@@ -166,8 +209,13 @@ const Request = () => {
             <TextField id="outlined-number" label="最高年齢" type="number" onChange={handleNumberChange("maxAge")}/>
           </Box>
         </div>
+        <div className='input_request'>
+          <Box component="form" sx={{'& > :not(style)': { m: 0, width: '50ch' },}} noValidate autoComplete="on">
+            <TextField error={bools.content} id="outlined-multiline-static" label="その他実験条件" multiline rows={4}/>
+          </Box>
+        </div>
         <div className='margin_request'/>
-        <Button disabled={btnState.state} onClick={()=>console.log(values)} variant="contained" startIcon={<CreateIcon />} component={Link} to="/request">
+        <Button disabled={btnState.state} onClick={()=>CreateRecruitment()} variant="contained" startIcon={<CreateIcon />} component={Link} to="/request">
           登録
         </Button>
       </div>

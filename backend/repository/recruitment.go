@@ -9,17 +9,26 @@ import (
 
 func CreateRecruitment(db *sqlx.DB, ma *model.Recruitment) (sql.Result, error) {
 	return db.Exec(`
-INSERT INTO recruitment (conditions, contents, max_participation, reward, submit_id, start_recruitment_period, finish_recruitment_period, start_implementation_period, finish_implementation_period, title)
+INSERT INTO recruitment (conditions, contents, max_participation, reward, submit_id, period, title, min_age, max_age, gender)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`, ma.Conditions, ma.Contents, ma.MaxParticipation, ma.Reward, ma.SubmitId, ma.StartRecruitmentPeriod, ma.FinishRecruitmentPeriod, ma.StartImplementationPeriod, ma.FinishImplementationPeriod, ma.Title)
+`, ma.Conditions, ma.Contents, ma.MaxParticipation, ma.Reward, ma.SubmitId, ma.Period, ma.Title, ma.MinAge, ma.MaxAge, ma.Gender)
 }
 
 
-func GetOtherAllRecruitment(db *sqlx.DB, myId int) ([]model.Recruitment, error) {
+func GetOtherAllRecruitment(db *sqlx.DB, myId int, gender int, minAge int, maxAge int) ([]model.Recruitment, error) {
+
+	if gender == 0 {
+		gender = 1
+	}else if gender == 1 {
+		gender = 0
+	}else{
+		gender = 3
+	}
+	
 	a := make([]model.Recruitment, 0)
 	if err := db.Select(&a, `
-	SELECT * FROM recruitment WHERE submit_id != ?;
-	`, myId); err != nil {
+	SELECT * FROM recruitment WHERE submit_id != ? && gender != ? && min_age <= ? && ? <= max_age;
+	`, myId, gender, minAge, maxAge); err != nil {
 		return nil, err
 	}
 	
@@ -55,7 +64,7 @@ DELETE FROM recruitment WHERE id = ?;
 
 func UpdateRecruitment(db *sqlx.DB, ma *model.Recruitment) (sql.Result, error) {
 	return db.Exec(`
-UPDATE recruitment SET title = ?, contents = ?, conditions = ?, maxparticipation = ?, reward = ?, start_recruitment_period = ?, finish_recruitment_period = ?, start_implementation_period = ?, finish_implementation_period = ? WHERE id = ?;
-`, ma.Title, ma.Contents, ma.Conditions, ma.MaxParticipation, ma.Reward, ma.StartRecruitmentPeriod, ma.FinishRecruitmentPeriod, ma.StartImplementationPeriod, ma.FinishImplementationPeriod, ma.Id)
+UPDATE recruitment SET title = ?, contents = ?, conditions = ?, maxparticipation = ?, reward = ?, period = ?, min_age, max_age, gender WHERE id = ?;
+`, ma.Title, ma.Contents, ma.Conditions, ma.MaxParticipation, ma.Reward, ma.Period, ma.Id, ma.MinAge, ma.MaxAge, ma.Gender)
 }
 

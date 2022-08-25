@@ -9,6 +9,8 @@ import (
 	"github.com/is0405/hacku/httputil"
 	"github.com/is0405/hacku/model"
 	"github.com/jmoiron/sqlx"
+
+	// "fmt"
 )
 
 const (
@@ -65,6 +67,7 @@ func getTokenFromHeader(req *http.Request) (string, error) {
 
 	l := len(bearer)
 	if len(header) > l+1 && header[:l] == bearer {
+		
 		return header[l+1:], nil
 	}
 

@@ -1,40 +1,62 @@
 import Navigation from '../../components/tsx/Navigation';
-import Card from '../../components/tsx/Card2';
+import Card from '../../components/tsx/Card';
+import Card2 from '../../components/tsx/Card2';
 import "../css/Mypage.css";
 
+import React, { useState, useEffect } from "react";
+import requests from "../../lib";
+import axios from 'axios';
+import { useCookies } from "react-cookie";
+
+
 const Board = () => {
-  const data = {
-    name:"渡邊将太",
-    faculty: "情理",
-    date:"2022/8/20",
-    title: 'Sota実験',
-    content: 'ロボットを使って会話をしていただきます。使用時間は6時間でだれでも参加できます。',
-    maxSubjects: 0,
-    period: "2時間",
-    reward: "2000円",
-    sex: 0,
-    minAge: 0,
-    maxAge: 0,
-  };
-  const List = [data,data,data]
+  const [cookies] = useCookies();
+  const accessToken = `Bearer ${cookies.token}`;
+  
+  const [recruitDatas, setRecDatas] = useState([]);
+  const [partiDatas, setPartiDatas] = useState([]);
+  useEffect( () => {
+    const headers = {
+     Authorization: accessToken,
+    }
+    
+    axios({
+      method: 'get',
+      url: requests.RecMine,
+      headers: headers
+      }).then((res)=> {
+       setRecDatas(res.data);
+     })
+     .catch((error) => {
+       console.log(error);
+    });
+    axios.get(requests.PartiMine, {
+      headers: headers
+      }).then((res)=> {
+       if(Object.keys(res.data).length) {
+         console.log("aaa");
+         setPartiDatas(res.data);
+       }
+     }).catch((error) => {
+       console.log(error);
+    });
+   },[accessToken])
+  
   return (
     <>
       <Navigation/>
       <div className='allDiv_mypage'>
         <div className='left_mypage'>
           <div className='text_mypage'>自分の投稿</div>
-          <div id='myCard_mypage'>
-            {List.map((d,index) => {return <Card data={d} key={index}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
+          <div className='myCard_mypage'>
+            {recruitDatas.map((d: any) => {
+              return <Card2 data={d} key={d.recruitmentId}/>})}
           </div>
         </div>
         <div className='right_mypage'>
-          <div className='text_mypage'>お気に入り</div>
-          <div id='favoCard_mypage'>
-            {List.map((d,index) => {return <Card data={d} key={index}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
+          <div className='text_mypage'>参加する実験</div>
+          <div className='favoCard_mypage'>
+            {partiDatas.map((d:any) => {return <Card data={d} key={d.recruitmentId}/>})}
           </div>
         </div>
       </div>

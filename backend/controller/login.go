@@ -48,7 +48,15 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 		return http.StatusInternalServerError, nil, err
 	}
 
-	
+	res, err := TokenGenerate(userId, a.jwtSecretKey)
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+
+	return http.StatusOK, res, nil
+}
+
+func TokenGenerate(userId int, key []byte) (LoginResponse, error) {
 	// jwtの作成
 	claims := model.Claims{
 		userId,
@@ -59,16 +67,15 @@ func (a *Login) Login(_ http.ResponseWriter, r *http.Request) (int, interface{},
 	}
 	
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(a.jwtSecretKey)
+	signedToken, err := token.SignedString(key)
 
 	if err != nil {
-		return http.StatusInternalServerError, nil, err
+		return LoginResponse{}, err
 	}
 	
 	//response構造体に用意したデータを格納
 	res := LoginResponse{
 		Token: signedToken,
 	}
-
-	return http.StatusOK, res, nil
+	return res, nil
 }
