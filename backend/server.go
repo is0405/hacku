@@ -113,7 +113,7 @@ func (s *Server) Route() *mux.Router {
 	//雇用情報
 	RecruitmentControlloer := controller.NewRecruitment(s.db)
 	r.Methods(http.MethodPost).Path("/recruitment").Handler(authChain.Then(AppHandler{RecruitmentControlloer.CreateRecruitment}))
-		r.Methods(http.MethodGet).Path("/recruitment/all/mine").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetMyAllRecruitment}))
+	r.Methods(http.MethodGet).Path("/recruitment/all/mine").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetMyAllRecruitment}))
 	r.Methods(http.MethodGet).Path("/recruitment/all/other").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetOtherAllRecruitment}))
 	r.Methods(http.MethodGet).Path("/recruitment/all/participation").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetMyParticipationAllRecruitment}))
 	r.Methods(http.MethodGet).Path("/recruitment/{recruitment_id}").Handler(authChain.Then(AppHandler{RecruitmentControlloer.GetRecruitmentFromID}))

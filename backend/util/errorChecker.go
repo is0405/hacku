@@ -3,6 +3,7 @@ package util
 import (
 	"regexp"
 	"strings"
+	"fmt"
 	"github.com/is0405/hacku/model"
 )
 
@@ -45,29 +46,35 @@ func CheckUser(mu *model.User, passwordCheck bool) bool {
 }
 
 func CheckRecruitment(ma *model.Recruitment) bool {
+	fmt.Println(1)
 	if ma.Contents == "" {
 		return false
 	}
 	ma.Contents = ReplaceString(ma.Contents)
 
+	fmt.Println(1)
 	if ma.Conditions == "" {
 		return false
 	}
 	ma.Conditions = ReplaceString(ma.Conditions)
 
+	fmt.Println(1)
 	if ma.Reward == "" {
 		return false
 	}
 	ma.Reward = ReplaceString(ma.Reward)
 
+	fmt.Println(1)
 	if ma.MaxParticipation <= 0 {
 		return false
 	}
 
+	fmt.Println(1)
 	if ma.Period == "" {
 		return false
 	}
-
+	
+	fmt.Println(1)
 	if ma.Title == "" {
 		return false
 	}
