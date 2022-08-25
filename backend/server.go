@@ -71,15 +71,17 @@ func (s *Server) Route() *mux.Router {
 	authMiddleware := middleware.NewAuth(s.jwtSecretKey, s.db)
 	corsMiddleware := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedHeaders: []string{"Authorization"},
 		AllowedMethods: []string{
+			http.MethodHead,
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodPatch,
 			http.MethodDelete,
 		},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: false,
 	})
-
+	
 	commonChain := alice.New(
 		middleware.RecoverMiddleware,
 		corsMiddleware.Handler,
@@ -89,6 +91,11 @@ func (s *Server) Route() *mux.Router {
 	)
 
 	r := mux.NewRouter()
+
+	 r.Methods(http.MethodOptions).PathPrefix("").Handler(commonChain.Then(http.StripPrefix("/img", http.FileServer(http.Dir("./img")))))
+	// r.Methods(http.MethodOptions).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	w.WriteHeader(http.StatusOK)
+	// })
 	//# API　一覧
 	//ログイン
 	loginController := controller.NewLogin(s.db, s.jwtSecretKey)
@@ -118,5 +125,6 @@ func (s *Server) Route() *mux.Router {
 	HiredControlloer := controller.NewHired(s.db)
 	r.Methods(http.MethodPost).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
 	r.Methods(http.MethodDelete).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.DeleteHired}))
+
 	return r
 }

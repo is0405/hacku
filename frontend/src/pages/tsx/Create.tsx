@@ -10,6 +10,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import "../css/Create.css";
 import {useNavigate} from "react-router-dom";
+
 import { useCookies } from "react-cookie";
 import requests from "../../lib";
 import axios from 'axios';
@@ -168,10 +169,12 @@ const Create= () => {
       })
       .catch((error) => {
         console.log(error);
+        alert("登録に失敗しました");
       });
     })
     .catch((error) => {
       console.log(error);
+      alert("登録に失敗しました");
     });
   }
 

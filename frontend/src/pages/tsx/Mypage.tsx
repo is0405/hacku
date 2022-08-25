@@ -7,19 +7,36 @@ import requests from "../../lib";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
 
-const Board = () => {
-  const setCookie = useCookies()[1];
 
+const Board = () => {
+  const [cookies] = useCookies();
+  const accessToken = `Bearer ${cookies.token}`;
+  
   const [recruitDatas, setRecDatas] = useState([]);
   const [partiDatas, setPartiDatas] = useState([]);
   useEffect( () => {
-    axios.get(requests.RecMine, { headers: {"Authorization" : `Bearer ${setCookie}`} }).then((res)=> {
+    const headers = {
+     Authorization: accessToken,
+    }
+    
+    axios({
+      method: 'get',
+      url: requests.RecMine,
+      headers: headers
+      }).then((res)=> {
        setRecDatas(res.data);
      })
-    axios.get(requests.PartiMine, { headers: {"Authorization" : `Bearer ${setCookie}`} }).then((res)=> {
+     .catch((error) => {
+       console.log(error);
+    });
+    axios.get(requests.PartiMine, {
+      headers: headers
+      }).then((res)=> {
        setPartiDatas(res.data);
-     })
-   },[])
+     }).catch((error) => {
+       console.log(error);
+    });
+   },[accessToken])
   
   return (
     <>

@@ -11,7 +11,7 @@ type Props = {
 export const RouteAuthGuard = (props:Props) => {
   const [cookies] = useCookies();
   if (cookies.token===undefined) {
-    console.log("ログインしてません", cookies.tooken)
+    console.log("ログインしてません", cookies.token)
     return <Navigate to={props.redirect} replace={false} />
   }
   else{

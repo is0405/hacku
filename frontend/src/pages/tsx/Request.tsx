@@ -11,6 +11,11 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Navigation from '../../components/tsx/Navigation';
 import "../css/Request.css";
 
+import { useCookies } from "react-cookie";
+import requests from "../../lib";
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
 interface State {
   title: string;
   content: string;
@@ -33,15 +38,17 @@ interface BtnState {
 }
 
 const Request = () => {
+  const navigation = useNavigate();
+  const setCookie = useCookies()[1];
   const [values, setValues] = React.useState<State>({
     title: '',
     content: '',
     maxSubjects: 0,
     period: "",
     reward: "",
-    sex: 0,
-    minAge: 0,
-    maxAge: 0
+    sex: 2,
+    minAge: 18,
+    maxAge: 60
   });
   const [bools, setBools] = useState<Bool>({
     title: false,
@@ -120,6 +127,25 @@ const Request = () => {
   const handleSelectChange = (prop: keyof State) => (event: SelectChangeEvent) => {
     setValues({ ...values, [prop]: Number(event.target.value)});
   };
+
+  const CreateRecruitment = () => {
+    axios({
+      method: 'post',
+      url: requests.Rec,
+      data: values,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        "Authorization" : `Bearer ${setCookie}`
+      }
+    })
+    .then((response) => {
+      navigation('/mypage');
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("登録に失敗しました");
+    });
+  }
 
   return (
     <>

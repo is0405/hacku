@@ -8,13 +8,10 @@ type Recruitment struct {
 	MaxParticipation int    `db:"max_participation" json:"maxParticipation"`
 	Reward           string `db:"reward" json:"reward"`
 	SubmitId         int    `db:"submit_id" json:"submitId"`
-	StartRecruitmentPeriod     string `db:"start_recruitment_period" json:"startRecruitmentPeriod"`
-	FinishRecruitmentPeriod    string `db:"finish_recruitment_period" json:"finishRecruitmentPeriod"`
-	StartImplementationPeriod  string `db:"start_implementation_period" json:"startImplementationPeriod"`
-	FinishImplementationPeriod string `db:"finish_implementation_period" json:"finishImplementationPeriod"`
-	Gender           int `db:"sex" json: sex"`
+	Period           string `db:"period" json:"period"`
+	Gender           int `db:"gender" json: sex"`
 	Title            string `db:"title" json:"title"`
 	MinAge           int `db:"min_age" json: minAge"`
 	MaxAge           int `db:"max_age" json: maxAge"`
-	UpdatedAt        string `db:"update_at" json:"updatedAt"`
+	UpdatedAt        string `db:"updated_at" json:"updatedAt"`
 }
