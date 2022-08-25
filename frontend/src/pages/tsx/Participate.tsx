@@ -44,7 +44,7 @@ const Participate = () => {
   const handleSelectChange = (prop: keyof State) => (event: SelectChangeEvent) => {
     setValues({ ...values, [prop]: Number(event.target.value)});
   };
-  const List = [data,data,data]
+  const List = [data,data,data,data,data,data,data]
   return (
     <>
       <Navigation/>
@@ -68,8 +68,6 @@ const Participate = () => {
 
       <div className='cardArea_participate'>
         {List.map((d,index) => {return <Card data={d} key={index}/>})}
-        {/* <Card data={data}/>
-        <Card data={data}/> */}
       </div>
     </>
   );

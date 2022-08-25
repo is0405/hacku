@@ -44,19 +44,15 @@ const Board = () => {
       <div className='allDiv_mypage'>
         <div className='left_mypage'>
           <div className='text_mypage'>自分の投稿</div>
-          <div id='myCard_mypage'>
+          <div className='myCard_mypage'>
             {recruitDatas.map((d: any) => {
               return <Card data={d} key={d.recruitmentId}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
           </div>
         </div>
         <div className='right_mypage'>
           <div className='text_mypage'>参加する実験</div>
-          <div id='favoCard_mypage'>
+          <div className='favoCard_mypage'>
             {partiDatas.map((d:any) => {return <Card data={d} key={d.recruitmentId}/>})}
-            {/* <Card data={data}/>
-            <Card data={data}/> */}
           </div>
         </div>
       </div>
