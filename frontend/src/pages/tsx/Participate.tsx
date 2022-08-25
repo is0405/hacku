@@ -44,7 +44,14 @@ const Participate = () => {
       headers: headers
       }).then((res)=> {
        console.log("this");
-       setPartiDatas(res.data);
+       let resDataList = res.data;
+       let validResDataList:any = []
+       resDataList.map((d: any) => {
+          if(d.maxSubjects>d.nowSubjects){
+            validResDataList.push(d)
+          }
+       })
+       setPartiDatas(validResDataList);
      })
      .catch((error) => {
        console.log(error);

@@ -31,7 +31,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 interface State {
   recruitmentId: number,
   name: string,
-  faculty: string,
+  faculty: number,
   date: string,
   title: string;
   content: string;
@@ -49,6 +49,11 @@ export default function RecipeReviewCard(props:{data:State}) {
   const [expanded, setExpanded] = React.useState(false);
   const [favo, setFavo] = React.useState("default");
 
+  const sexNumToStr = ["男性","女性","特になし"]
+
+  const facultyNumToStr = ["法","産社","国際","文","言語","先端","映像","経済","スポーツ","食マネ","理工","情理","生命","薬","経営","政策","心理","グローバル","人間科学","テクノロジー","その他"]
+
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -64,14 +69,14 @@ export default function RecipeReviewCard(props:{data:State}) {
   return (
     <Card sx={{ maxWidth: 500}} className="card_card">
       <CardHeader
-        avatar={<Avatar sx={{ bgcolor: orange[400] }} aria-label="recipe">{props.data.faculty}</Avatar>} title={props.data.name} subheader={props.data.date}/>
+        avatar={<Avatar sx={{ bgcolor: orange[400] }} aria-label="recipe">{facultyNumToStr[props.data.faculty]}</Avatar>} title={props.data.name} subheader={props.data.date}/>
       <CardContent>
         <Typography variant="body1" color="text.secondary">
         {props.data.title}<br/>
         所用時間:{props.data.period}<br/>
         謝礼:{props.data.reward}<br/>
         条件(年齢):{props.data.minAge}歳から{props.data.maxAge}歳<br/>
-        条件(性別):{props.data.sex}<br/>
+        条件(性別):{sexNumToStr[props.data.sex]}<br/>
         条件(その他):{props.data.conditions}<br/>
         </Typography>
       </CardContent>
