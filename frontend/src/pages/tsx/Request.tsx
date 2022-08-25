@@ -52,7 +52,7 @@ const Request = () => {
     sex: 2,
     minAge: 18,
     maxAge: 60,
-    conditions: '本大学に所属している学生',
+    conditions: '',
   });
   const [bools, setBools] = useState<Bool>({
     title: false,
@@ -96,35 +96,39 @@ const Request = () => {
 
   const handleChange =(prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
-    if(event.target.value===""){
-      setBools({ ...bools, [prop]: true });
-    }
-    else{
-      setBools({ ...bools, [prop]: false });
-    }
-    if(buttonJudge(prop) && event.target.value!==""){
-      console.log("ボタン表示")
-      setBtnState({ ...btnState, state: false });
-    }
-    else{
-      console.log("ボタン非表示")
-      setBtnState({ ...btnState, state: true });
+    if(prop!=="conditions"){
+      if(event.target.value===""){
+        setBools({ ...bools, [prop]: true });
+      }
+      else{
+        setBools({ ...bools, [prop]: false });
+      }
+      if(buttonJudge(prop) && event.target.value!==""){
+        console.log("ボタン表示")
+        setBtnState({ ...btnState, state: false });
+      }
+      else{
+        console.log("ボタン非表示")
+        setBtnState({ ...btnState, state: true });
+      }
     }
   };
 
   const handleNumberChange =(prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: Number(event.target.value) });
-    if(Number(event.target.value)<=0){
-      setBools({ ...bools, [prop]: true });
-    }
-    else{
-      setBools({ ...bools, [prop]: false });
-    }
-    if(buttonJudge(prop) && Number(event.target.value)>0){
-      setBtnState({ ...btnState, state: false });
-    }
-    else{
-      setBtnState({ ...btnState, state: true });
+    if(prop!=="minAge" && prop!=="maxAge"){
+      if(Number(event.target.value)<=0){
+        setBools({ ...bools, [prop]: true });
+      }
+      else{
+        setBools({ ...bools, [prop]: false });
+      }
+      if(buttonJudge(prop) && Number(event.target.value)>0){
+        setBtnState({ ...btnState, state: false });
+      }
+      else{
+        setBtnState({ ...btnState, state: true });
+      }
     }
   };
 
@@ -154,7 +158,7 @@ const Request = () => {
         headers:headers
       })
       .then((response) => {
-    　  alert("登録完了しました");
+        alert("登録完了しました");
         navigation('/mypage');
       })
       .catch((error) => {
@@ -211,7 +215,7 @@ const Request = () => {
         </div>
         <div className='input_request'>
           <Box component="form" sx={{'& > :not(style)': { m: 0, width: '50ch' },}} noValidate autoComplete="on">
-            <TextField error={bools.content} id="outlined-multiline-static" label="その他実験条件" multiline rows={4}/>
+            <TextField id="outlined-multiline-static" label="その他実験条件" multiline rows={4} onChange={handleChange('conditions')}/>
           </Box>
         </div>
         <div className='margin_request'/>
