@@ -29,27 +29,27 @@ func (a *Hired) PostHired(_ http.ResponseWriter, r *http.Request) (int, interfac
 		return http.StatusInternalServerError, nil, err
 	}
 
-	aid, err := util.URLToInt(r)
+	rid, err := util.URLToInt(r)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 	
-	mr, err := repository.GetRecruitmentFromRId(a.db, aid)
+	mr, err := repository.GetRecruitmentFromRId(a.db, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 	
 	//自分が登録していない
-	cnt, err := repository.CountFromRidUid(a.db, aid, getc.UserId)
+	cnt, err := repository.CountFromRidUid(a.db, rid, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
 
-	if cnt == 0 {
+	if cnt != 0 {
 		return http.StatusBadRequest, nil, errors.New("already applied")
 	}
 
-	nowParticipation, err := repository.CountUidFromRid(a.db, aid)
+	nowParticipation, err := repository.CountUidFromRid(a.db, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -59,7 +59,7 @@ func (a *Hired) PostHired(_ http.ResponseWriter, r *http.Request) (int, interfac
 	}
 
 	HiredService := service.NewHired(a.db)
-	_, err = HiredService.PostHired(aid, getc.UserId)
+	_, err = HiredService.PostHired(rid, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}

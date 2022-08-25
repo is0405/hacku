@@ -39,6 +39,7 @@ type RecruitmentResponse struct {
 	MinAge           int    `json:"minAge"`
 	MaxAge           int    `json:"maxAge"`
 	NowParticipation int    `json:"nowSubjects"`
+	IamParticipation bool   `json:"iamParticipation"`
 }
 
 func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -76,7 +77,7 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 
 //特定の雇用情報をGet
 func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	_, err := httputil.GetClaimsFromContext(r.Context())
+	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
@@ -102,6 +103,15 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
+
+	c, err := repository.CountFromRidUid(a.db, rid, getc.UserId);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	iam, err := strconv.ParseBool(strconv.Itoa(c));
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 	
 	res := RecruitmentResponse{
 		Id: recruitment.Id,
@@ -118,6 +128,7 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 	    MinAge: recruitment.MinAge,
 	    MaxAge: recruitment.MaxAge,
 	    NowParticipation:cnt,
+		IamParticipation: iam,
 	}
 
 	return http.StatusOK, res, nil
@@ -162,6 +173,7 @@ func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request
 			MinAge: recruitment.MinAge,
 			MaxAge: recruitment.MaxAge,
 			NowParticipation:cnt,
+			IamParticipation: false,
 		}
 		
 		res = append(res, ins)
@@ -210,7 +222,17 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 		if err != nil {
 			return http.StatusInternalServerError, nil, err
 		}
-	
+
+		c, err := repository.CountFromRidUid(a.db, recruitment.Id, getc.UserId);
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+		
+		iam, err := strconv.ParseBool(strconv.Itoa(c));
+		if err != nil {
+			return http.StatusInternalServerError, nil, err
+		}
+		
 		ins := RecruitmentResponse{
 			Id: recruitment.Id,
 			Name: user.Name,
@@ -226,6 +248,7 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 			MinAge: recruitment.MinAge,
 			MaxAge: recruitment.MaxAge,
 			NowParticipation:cnt,
+			IamParticipation: iam,
 		}
 		
 		res = append(res, ins)
@@ -280,6 +303,7 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 			MinAge: recruitment.MinAge,
 			MaxAge: recruitment.MaxAge,
 			NowParticipation:cnt,
+			IamParticipation:true,
 		}
 		
 		res = append(res, ins)

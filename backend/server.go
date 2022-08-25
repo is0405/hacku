@@ -123,8 +123,8 @@ func (s *Server) Route() *mux.Router {
 	
 	//申請情報
 	HiredControlloer := controller.NewHired(s.db)
-	r.Methods(http.MethodPost).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
-	r.Methods(http.MethodDelete).Path("/hired//{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.DeleteHired}))
+	r.Methods(http.MethodPost).Path("/hired/{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
+	r.Methods(http.MethodDelete).Path("/hired/{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.DeleteHired}))
 
 	return r
 }

@@ -1,5 +1,6 @@
 import Navigation from '../../components/tsx/Navigation';
-import Card from '../../components/tsx/Card2';
+import Card from '../../components/tsx/Card';
+import Card2 from '../../components/tsx/Card2';
 import "../css/Mypage.css";
 
 import React, { useState, useEffect } from "react";
@@ -32,7 +33,10 @@ const Board = () => {
     axios.get(requests.PartiMine, {
       headers: headers
       }).then((res)=> {
-       setPartiDatas(res.data);
+       if(Object.keys(res.data).length) {
+         console.log("aaa");
+         setPartiDatas(res.data);
+       }
      }).catch((error) => {
        console.log(error);
     });
@@ -46,7 +50,7 @@ const Board = () => {
           <div className='text_mypage'>自分の投稿</div>
           <div className='myCard_mypage'>
             {recruitDatas.map((d: any) => {
-              return <Card data={d} key={d.recruitmentId}/>})}
+              return <Card2 data={d} key={d.recruitmentId}/>})}
           </div>
         </div>
         <div className='right_mypage'>
