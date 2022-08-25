@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	// "fmt"
+	"fmt"
 
 	"github.com/is0405/hacku/httputil"
 	"github.com/is0405/hacku/model"
@@ -30,13 +30,14 @@ type RecruitmentResponse struct {
 	UpadateAt        string `json:"date"`
 	Title            string `json:"title"`
 	Content          string `json:"content"`
+	Conditions       string `json:"conditions"`
 	MaxSubjects      int    `json:"maxSubjects"`
 	Period           string `json:"period"`
 	Reward           string `json:"reward"`
 	Sex              int    `json:"sex"`
 	MinAge           int    `json:"minAge"`
 	MaxAge           int    `json:"maxAge"`
-	NowParticipation int    `json:"nowparticipation"`
+	NowParticipation int    `json:"nowSubjects"`
 }
 
 func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -107,6 +108,7 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 	    UpadateAt: recruitment.UpdatedAt,
 	    Title: recruitment.Title,
 	    Content: recruitment.Contents,
+		Conditions: recruitment.Conditions,
 	    MaxSubjects: recruitment.MaxParticipation,
 	    Period: recruitment.Period,
 	    Reward: recruitment.Reward,
@@ -150,6 +152,7 @@ func (a *Recruitment) GetMyAllRecruitment(_ http.ResponseWriter, r *http.Request
 			UpadateAt: recruitment.UpdatedAt,
 			Title: recruitment.Title,
 			Content: recruitment.Contents,
+			Conditions: recruitment.Conditions,
 			MaxSubjects: recruitment.MaxParticipation,
 			Period: recruitment.Period,
 			Reward: recruitment.Reward,
@@ -197,6 +200,7 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 			UpadateAt: recruitment.UpdatedAt,
 			Title: recruitment.Title,
 			Content: recruitment.Contents,
+			Conditions: recruitment.Conditions,
 			MaxSubjects: recruitment.MaxParticipation,
 			Period: recruitment.Period,
 			Reward: recruitment.Reward,
@@ -214,6 +218,8 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 
 //自分が参加する雇用情報を全て表示
 func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	
+	fmt.Println(1)
 	getc, err := httputil.GetClaimsFromContext(r.Context())
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
@@ -225,6 +231,7 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 	}	
 
 	var res []RecruitmentResponse
+	fmt.Println(2)
 	for _, rid := range rid_list {
 		recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
 		if err != nil {
@@ -249,6 +256,7 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 			UpadateAt: recruitment.UpdatedAt,
 			Title: recruitment.Title,
 			Content: recruitment.Contents,
+			Conditions: recruitment.Conditions,
 			MaxSubjects: recruitment.MaxParticipation,
 			Period: recruitment.Period,
 			Reward: recruitment.Reward,
