@@ -9,9 +9,9 @@ type Recruitment struct {
 	Reward           string `db:"reward" json:"reward"`
 	SubmitId         int    `db:"submit_id" json:"submitId"`
 	Period           string `db:"period" json:"period"`
-	Gender           int `db:"gender" json: sex"`
+	Gender           int    `db:"gender" json:"sex"`
 	Title            string `db:"title" json:"title"`
-	MinAge           int `db:"min_age" json: minAge"`
-	MaxAge           int `db:"max_age" json: maxAge"`
+	MinAge           int    `db:"min_age" json:"minAge"`
+	MaxAge           int    `db:"max_age" json:"maxAge"`
 	UpdatedAt        string `db:"updated_at" json:"updatedAt"`
 }
