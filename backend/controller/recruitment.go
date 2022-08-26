@@ -88,6 +88,11 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 		return http.StatusBadRequest, nil, err
 	}
 
+	mydata, err := repository.GetUser(a.db, getc.UserId);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
+	
 	recruitment, err := repository.GetRecruitmentFromRId(a.db, rid)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
@@ -130,7 +135,7 @@ func (a *Recruitment) GetRecruitmentFromID(_ http.ResponseWriter, r *http.Reques
 	    MaxAge: recruitment.MaxAge,
 	    NowParticipation:cnt,
 		IamParticipation: iam,
-		MyAge: user.Age,
+		MyAge: mydata.Age,
 	}
 
 	return http.StatusOK, res, nil
@@ -191,6 +196,11 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
 	}
+
+	mydata, err := repository.GetUser(a.db, getc.UserId);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 	
 	recruitments, err := repository.GetOtherAllRecruitment(a.db, getc.UserId)
 	if err != nil {
@@ -236,7 +246,7 @@ func (a *Recruitment) GetOtherAllRecruitment(_ http.ResponseWriter, r *http.Requ
 			MaxAge: recruitment.MaxAge,
 			NowParticipation:cnt,
 			IamParticipation: iam,
-			MyAge: user.Age,
+			MyAge: mydata.Age,
 		}
 		
 		res = append(res, ins)
@@ -256,7 +266,12 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 	rid_list, err := repository.GetAllRidFromUid(a.db, getc.UserId)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
-	}	
+	}
+
+	mydata, err := repository.GetUser(a.db, getc.UserId);
+	if err != nil {
+		return http.StatusInternalServerError, nil, err
+	}
 
 	var res []RecruitmentResponse
 	for _, rid := range rid_list {
@@ -292,7 +307,7 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 			MaxAge: recruitment.MaxAge,
 			NowParticipation:cnt,
 			IamParticipation:true,
-			MyAge: user.Age,
+			MyAge: mydata.Age,
 		}
 		
 		res = append(res, ins)
