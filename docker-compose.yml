@@ -37,6 +37,7 @@ services:
     build:
       context: ./frontend
     container_name: hacku-frontend
+    command: react-scripts start
     ports:
       - 3000:3000
     environment:
