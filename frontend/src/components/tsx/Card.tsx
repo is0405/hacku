@@ -111,7 +111,7 @@ export default function RecipeReviewCard(props:{data:State}) {
       <CardContent>
         <Typography variant="body1" color="text.secondary">
         {props.data.title}<br/>
-        所用時間:{props.data.period}<br/>
+        {/* 所用時間:{props.data.period}<br/> */}
         謝礼:{props.data.reward}<br/>
         条件(年齢):{props.data.minAge}歳から{props.data.maxAge}歳<br/>
         条件(性別):{sexNumToStr[props.data.sex]}<br/>
