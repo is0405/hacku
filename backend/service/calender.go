@@ -5,24 +5,42 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
-	// "github.com/is0405/hacku/model"
+	"github.com/is0405/hacku/model"
 	"github.com/is0405/hacku/repository"
 
 	//"fmt"
 )
 
-type Hired struct {
+type Calender struct {
 	db *sqlx.DB
 }
 
-func NewHired (db *sqlx.DB) *Hired {
-	return &Hired{db}
+func NewCalender (db *sqlx.DB) *Calender {
+	return &Calender{db}
 }
 
-func (a *Hired) PostHired(aid int, uid int) (int64, error) {
+func (a *Calender) CreateCalender(mc *model.Calender, rid int) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
-		hired, err := repository.PostHired(a.db, aid, uid)	
+		dateId, cnt, err := repository.GetDateIdAndCount(a.db, mc.Date, mc.Time);	
+		if err != nil {
+			return err
+		}
+
+		if cnt == 0 {
+			d, err := repository.CreateCalender(a.db, dateId, rid);
+			if err != nil {
+				return err
+			}
+			
+			id, err := d.LastInsertId()
+			if err != nil {
+				return err
+			}
+			dateId = int(id)
+		}
+
+		c, err := repository.CreateCalender(a.db, dateId, rid);	
 		if err != nil {
 			return err
 		}
@@ -31,12 +49,13 @@ func (a *Hired) PostHired(aid int, uid int) (int64, error) {
 			return err
 		}
 		
-		id, err := hired.LastInsertId()
+		id, err := c.LastInsertId()
 		if err != nil {
 			return err
 		}
 		
 		createdId = id
+		
 		return err
 	}); err != nil {
 		return 0, errors.Wrap(err, "failed auth insert transaction")
@@ -44,10 +63,10 @@ func (a *Hired) PostHired(aid int, uid int) (int64, error) {
 	return createdId, nil
 }
 
-func (a *Hired) DeleteHired(aid int, uid int) (int64, error) {
+func (a *Calender) PatchCalender(rid int, userId int, carenderId int) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
-		hired, err := repository.DeleteHired(a.db, aid, uid)	
+		_, err := repository.UpdateParticipation(a.db, rid, userId, carenderId);	
 		if err != nil {
 			return err
 		}
@@ -55,18 +74,9 @@ func (a *Hired) DeleteHired(aid int, uid int) (int64, error) {
 		if err := tx.Commit(); err != nil {
 			return err
 		}
-
-		_, err = repository.UpdateParticipation(a.db, aid, uid, -1)
-		if err != nil {
-			return err
-		}
 		
-		id, err := hired.LastInsertId()
-		if err != nil {
-			return err
-		}
+		createdId = 0
 		
-		createdId = id
 		return err
 	}); err != nil {
 		return 0, errors.Wrap(err, "failed auth insert transaction")
