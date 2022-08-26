@@ -44,8 +44,8 @@ func GetCalenderFromRid(db *sqlx.DB, rid int) ([]model.Calender, error) {
 	if err := db.Select(&a, `
 SELECT calender.id, calender_date.date, calender_date.time
 FROM calender 
-WHERE recruitment_id = ?
-INNER JOIN calender_date ON calender_date.id = calender.date_id;
+JOIN calender_date ON calender_date.id = calender.date_id
+WHERE recruitment_id = ?;
 	`, rid); err != nil {
 		return nil, err
 	}

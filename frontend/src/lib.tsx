@@ -8,7 +8,7 @@ const requests = {
   RecOther: BaseURL+'/recruitment/all/other',  // GET
   PartiMine: BaseURL+'/recruitment/all/participation', //GET
   Hired: BaseURL+'/hired', // POST ,DELETE
-  Calender: BaseURL+'/carender',  // POST ,GET, PATCH
+  Calender: BaseURL+'/calender',  // POST ,GET, PATCH
 };
 
 export default requests;

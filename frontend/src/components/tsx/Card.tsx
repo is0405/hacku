@@ -72,7 +72,7 @@ export default function RecipeReviewCard(props:{data:State}) {
     boxShadow: 24,
     p: 4,
   };
-  const [checkboxSelection, setCheckboxSelection] = React.useState(true);
+    const [checkboxSelection, setCheckboxSelection] = React.useState(true);
   const [cookies] = useCookies();
   const accessToken = `Bearer ${cookies.token}`;
   const [expanded, setExpanded] = React.useState(false);
@@ -80,7 +80,7 @@ export default function RecipeReviewCard(props:{data:State}) {
 
   const [rows, setRows] = React.useState<DateTime[]>([{id:3, date: "YYYY/MM/DD", time: '09:00〜10:30'},{id:4, date: "YYYY/MM/DD", time: '09:00〜10:30'}]);
 
-  const [participateTime, setParticipateTime] = React.useState<{date:string,time:string}>({date:"",time:""});
+    const [participateTime, setParticipateTime] = React.useState<{id:number,date:string,time:string}>({id:-1,date:"",time:""});
 
   const columns = [
     { field: 'date', headerName: '実験候補日', width: 150 },
@@ -106,10 +106,52 @@ export default function RecipeReviewCard(props:{data:State}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const clickFavoriteBtn = () => {
-    //ここで行を取得する
-    
-    //ポップアップ表示
-    handleOpen();
+    const headers = {
+      Authorization: accessToken, 
+    }
+      
+    if (!favo) {
+      axios({
+        method: 'get',
+        url: requests.Calender +"/"+props.data.recruitmentId,
+        headers: headers
+      })
+      .then((response) => {
+        setRows(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      //ポップアップ表示
+      handleOpen();
+    }else{
+      axios({
+        method: 'delete',
+        url: requests.Hired +"/"+props.data.recruitmentId,
+        data: {},
+        headers:headers
+      })
+      .then((response) => {
+        axios({
+          method: 'patch',
+          url: requests.Calender +"/"+props.data.recruitmentId,
+          data:{ id: -1 },  
+          headers: headers
+        })
+        .then((response) => {
+          setFavo(false);
+          props.data.nowSubjects -= 1;
+          props.data.iamParticipation = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
   }
     
   //参加ボタン押されたら
@@ -118,49 +160,52 @@ export default function RecipeReviewCard(props:{data:State}) {
     handleClose();
 
     //ここを改良↓
-    // const headers = {
-    //   Authorization: accessToken,
-    // }
-    // if (!favo) {
-    //   axios({
-    //     method: 'post',
-    //     url: requests.Hired +"/"+props.data.recruitmentId,
-    //     data: {},
-    //     headers: headers
-    //   })
-    //   .then((response) => {
-    //     setFavo(true);
-    //     props.data.nowSubjects += 1;
-    //     props.data.iamParticipation = true;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // } else {
-    //   axios({
-    //     method: 'delete',
-    //     url: requests.Hired +"/"+props.data.recruitmentId,
-    //     data: {},
-    //     headers:headers
-    //   })
-    //   .then((response) => {
-    //     setFavo(false);
-    //     props.data.nowSubjects -= 1;
-    //     props.data.iamParticipation = false;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // }
+    const headers = {
+      Authorization: accessToken,
+    }
+    if (!favo) {
+      axios({
+        method: 'post',
+        url: requests.Hired +"/"+props.data.recruitmentId,
+        data: {},
+        headers: headers
+      })
+      .then((response) => {
+        axios({
+          method: 'patch',
+          url: requests.Calender +"/"+props.data.recruitmentId,
+          data:{ id: participateTime.id },  
+          headers: headers
+        })
+        .then((response) => {
+          setFavo(true);
+          props.data.nowSubjects += 1;
+          props.data.iamParticipation = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+          
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
   }
+
   const selectList = (ids:any) =>{
     let idList:number[] = [];
     Object.keys(ids).forEach(function (key) {
       idList.push(Number(ids[key]))
     })
-    if(idList.length==1){
-      setBtnState({ ...btnState, state: false });
-      setParticipateTime(rows[idList[0]])
+    if(idList.length===1){
+      for(let i=0; i<rows.length; i++){
+        if(idList.includes(rows[i].id)){
+          setBtnState({ ...btnState, state: false });
+          setParticipateTime(rows[i])
+          break
+        }
+      }
     }
     else{
       setBtnState({ ...btnState, state: true });

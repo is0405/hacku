@@ -116,17 +116,22 @@ func (a *Calender) PatchPartiCalender(_ http.ResponseWriter, r *http.Request) (i
 		return http.StatusBadRequest, nil, err
 	}
 
-	var carenderId int
+	type reqCalender struct {
+		id int `json:"id"`
+	}
+	var carenderId reqCalender
 	err = json.NewDecoder(r.Body).Decode(&carenderId);
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 
 	CalenderService := service.NewCalender(a.db)
-	_, err = CalenderService.PatchCalender(rid, getc.UserId, carenderId)
+	_, err = CalenderService.PatchCalender(rid, getc.UserId, carenderId.id)
+	
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
-	}	
+	}
+	
 	return http.StatusOK, nil, nil
 }
 
