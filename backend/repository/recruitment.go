@@ -7,7 +7,7 @@ import (
 	//"fmt"
 )
 
-func CreateRecruitment(db *sqlx.DB, ma *model.Recruitment) (sql.Result, error) {
+func CreateRecruitment(db *sqlx.DB, ma *model.ReqRecruitment) (sql.Result, error) {
 	return db.Exec(`
 INSERT INTO recruitment (conditions, contents, max_participation, reward, submit_id, period, title, min_age, max_age, gender)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

@@ -28,3 +28,32 @@ VALUES (2, 1);
 INSERT INTO `participation` (recruitment_id, user_id)
 VALUES (2, 3);
 
+INSERT INTO `calender_date` (`date`, `time`)
+VALUES ("2022/08/30", "10:40〜12:10");
+
+INSERT INTO `calender_date` (`date`, `time`)
+VALUES ("2022/08/30", "13:00〜14:30 ");
+
+INSERT INTO `calender_date` (`date`, `time`)
+VALUES ("2022/08/31", "13:00〜14:30 ");
+
+INSERT INTO `calender_date` (`date`, `time`)
+VALUES ("2022/08/31", "10:40〜12:10");
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (1, 1);
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (2, 1);
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (3, 1);
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (4, 1);
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (1, 2);
+
+INSERT INTO `calender` (`date_id`, recruitment_id)
+VALUES (4, 2);

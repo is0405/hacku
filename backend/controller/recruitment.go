@@ -50,7 +50,7 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 		return http.StatusInternalServerError, nil, err
 	}
 
-	ma := &model.Recruitment{}
+	ma := &model.ReqRecruitment{}
 	
 	err = json.NewDecoder(r.Body).Decode(&ma);
 	if err != nil {
@@ -71,7 +71,7 @@ func (a *Recruitment) CreateRecruitment(_ http.ResponseWriter, r *http.Request) 
 	_, err = RecruitmentService.Create(ma)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
-	}	
+	}
 
 	return http.StatusOK, nil, nil
 }
@@ -318,53 +318,53 @@ func (a *Recruitment) GetMyParticipationAllRecruitment(_ http.ResponseWriter, r 
 
 func (a *Recruitment) UpdateRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 
-	getc, err := httputil.GetClaimsFromContext(r.Context())
-	if err != nil {
-		return http.StatusInternalServerError, nil, err
-	}
+	// getc, err := httputil.GetClaimsFromContext(r.Context())
+	// if err != nil {
+	// 	return http.StatusInternalServerError, nil, err
+	// }
 
-	ma := &model.Recruitment{}
+	// ma := &model.Recruitment{}
 	
-	err = json.NewDecoder(r.Body).Decode(&ma);
-	if err != nil {
-		return http.StatusBadRequest, nil, err
-	}
+	// err = json.NewDecoder(r.Body).Decode(&ma);
+	// if err != nil {
+	// 	return http.StatusBadRequest, nil, err
+	// }
 
-	if ma.SubmitId != getc.UserId {
-		return http.StatusUnauthorized, nil, errors.New("Not Allowed Method")
-	}
+	// if ma.SubmitId != getc.UserId {
+	// 	return http.StatusUnauthorized, nil, errors.New("Not Allowed Method")
+	// }
 	
-	id, err := util.URLToInt(r)
-	if err != nil {
-		return http.StatusBadRequest, nil, err
-	}
+	// id, err := util.URLToInt(r)
+	// if err != nil {
+	// 	return http.StatusBadRequest, nil, err
+	// }
 
 	
-	mar, err := repository.GetRecruitmentFromRId(a.db, id)
-	if err != nil {
-		return http.StatusInternalServerError, nil, err
-	}
+	// mar, err := repository.GetRecruitmentFromRId(a.db, id)
+	// if err != nil {
+	// 	return http.StatusInternalServerError, nil, err
+	// }
 	
-	if ma.SubmitId != mar.SubmitId {
-		return http.StatusUnauthorized, nil, errors.New("Not Allowed Method")
-	}
+	// if ma.SubmitId != mar.SubmitId {
+	// 	return http.StatusUnauthorized, nil, errors.New("Not Allowed Method")
+	// }
 	
-	if !util.CheckRecruitment(ma) {
-		return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
-	}
+	// if !util.CheckRecruitment(ma) {
+	// 	return http.StatusUnprocessableEntity, nil, errors.New("required parameter is missing or invalid")
+	// }
 
-	RecruitmentService := service.NewRecruitment(a.db)
-	_, err = RecruitmentService.Update(ma)
-	if err != nil {
-		return http.StatusInternalServerError, nil, err
-	}	
+	// RecruitmentService := service.NewRecruitment(a.db)
+	// _, err = RecruitmentService.Update(ma)
+	// if err != nil {
+	// 	return http.StatusInternalServerError, nil, err
+	// }	
 
-	res, err := repository.GetRecruitmentFromRId(a.db, ma.Id)
-	if err != nil {
-		return http.StatusInternalServerError, nil, err
-	}
+	// res, err := repository.GetRecruitmentFromRId(a.db, ma.Id)
+	// if err != nil {
+	// 	return http.StatusInternalServerError, nil, err
+	// }
 	
-	return http.StatusOK, res, nil
+	return http.StatusOK, nil, nil
 }
 
 func (a *Recruitment) DeleteRecruitment(_ http.ResponseWriter, r *http.Request) (int, interface{}, error) {

@@ -45,7 +45,7 @@ func CheckUser(mu *model.User, passwordCheck bool) bool {
 	return true
 }
 
-func CheckRecruitment(ma *model.Recruitment) bool {
+func CheckRecruitment(ma *model.ReqRecruitment) bool {
 	if ma.Contents == "" {
 		return false
 	}

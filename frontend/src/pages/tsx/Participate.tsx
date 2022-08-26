@@ -6,7 +6,6 @@ import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import "../css/Participate.css";
 
@@ -84,9 +83,9 @@ const Participate = () => {
   const SearchClick = () => {
     let validResDataList:any = []
     allpartiDatas.map((d: any) => {
-      if(values2.sex!=2){
-        if(d.sex == values2.sex || d.sex ==2){
-          if(values2.match==1){
+      if(values2.sex!==2){
+        if(d.sex === values2.sex || d.sex === 2){
+          if(values2.match === 1){
             if(d.minAge<=myage && myage<=d.maxAge){
               validResDataList.push(d)
             }
@@ -97,7 +96,7 @@ const Participate = () => {
         }
       }
       else{
-        if(values2.match==1){
+        if(values2.match === 1){
           if(d.minAge<=myage && myage<=d.maxAge){
             validResDataList.push(d)
           }

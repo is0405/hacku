@@ -228,13 +228,15 @@ const Request = () => {
           sex: values.sex,
           minAge: values.minAge,
           maxAge: values.maxAge,
-          conditions: values.conditions
+          conditions: values.conditions,
+          dateList: registList
         },
         headers:headers
       })
       .then((response) => {
         alert("登録完了しました");
         navigation('/mypage');
+
       })
       .catch((error) => {
         console.log(error);

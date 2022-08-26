@@ -19,10 +19,10 @@ func NewRecruitment (db *sqlx.DB) *Recruitment {
 	return &Recruitment{db}
 }
 
-func (a *Recruitment) Create(ma *model.Recruitment) (int64, error) {
+func (a *Recruitment) Create(ma *model.ReqRecruitment) (int64, error) {
 	var createdId int64
 	if err := dbutil.TXHandler(a.db, func(tx *sqlx.Tx) error {
-		user, err := repository.CreateRecruitment(a.db, ma)	
+		rec, err := repository.CreateRecruitment(a.db, ma)	
 		if err != nil {
 			return err
 		}
@@ -31,10 +31,38 @@ func (a *Recruitment) Create(ma *model.Recruitment) (int64, error) {
 			return err
 		}
 		
-		id, err := user.LastInsertId()
+		id, err := rec.LastInsertId()
 		if err != nil {
 			return err
 		}
+
+		rid := int(id)
+
+		for _, dl:= range ma.DateList {
+			dateId, cnt, err := repository.GetDateIdAndCount(a.db, dl.Date, dl.Time);	
+			if err != nil {
+				return err
+			}
+
+			if cnt == 0 {
+				d, err := repository.CreateDate(a.db, dl.Date, dl.Time);
+				if err != nil {
+					return err
+				}
+			
+				ccid, err := d.LastInsertId()
+				if err != nil {
+					return err
+				}
+				dateId = int(ccid)
+			}
+
+			_, err = repository.CreateCalender(a.db, dateId, rid);	
+			if err != nil {
+				return err
+			}
+		}
+		
 		
 		createdId = id
 		return err
