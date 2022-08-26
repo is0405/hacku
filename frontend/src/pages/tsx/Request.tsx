@@ -10,7 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Navigation from '../../components/tsx/Navigation';
 import "../css/Request.css";
-
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DataGrid } from '@mui/x-data-grid';
+import { Dayjs } from 'dayjs';
 import { useCookies } from "react-cookie";
 import requests from "../../lib";
 import axios from 'axios';
@@ -37,17 +41,87 @@ interface Bool {
 interface BtnState {
   state: boolean;
 }
+interface DateTime {
+  id: number,
+  date: string,
+  time: string
+}
 
 const Request = () => {
   const navigation = useNavigate();
   const [cookies] = useCookies();
   const accessToken = `Bearer ${cookies.token}`;
+  const [calenderValue, setCalenderValue] = React.useState<Dayjs | null>(null);
+  const [checkboxSelection, setCheckboxSelection] = React.useState(true);
+  const [rows, setRows] = React.useState<DateTime[]>([]);
+
+  //選択した行（id、date、timeをもつ）が入っているリスト
+  const [registList, setRegistList] = React.useState<DateTime[]>([]);
+
+  const columns = [
+    { field: 'date', headerName: '日程', width: 150 },
+    { field: 'time', headerName: '時間', width: 150 },
+  ];
+
+  const SetCalenderValue = (newValue:Dayjs | null) =>{
+    if(newValue){
+      console.log(typeof(newValue.format("YYYY/MM/DD")))
+      if(newValue.format("YYYY/MM/DD")!=="Invalid Date"){
+        setCalenderValue(newValue);
+        let nowRows: DateTime[] =  rows.map(x => x);
+        let data1: DateTime = { id: 1, date: newValue.format("YYYY/MM/DD"), time: '09:00〜10:30' };
+        let data2: DateTime = { id: 2, date: newValue.format("YYYY/MM/DD"), time: '10:40〜12:10' };
+        let data3: DateTime = { id: 3, date: newValue.format("YYYY/MM/DD"), time: '13:00〜14:30' };
+        let data4: DateTime = { id: 4, date: newValue.format("YYYY/MM/DD"), time: '14:40〜16:10' };
+        let data5: DateTime = { id: 5, date: newValue.format("YYYY/MM/DD"), time: '16:20〜17:50' };
+        let index = nowRows.length;
+        data1.id = index+1;
+        data2.id = index+2;
+        data3.id = index+3;
+        data4.id = index+4;
+        data5.id = index+5;
+        nowRows.push(data1);
+        nowRows.push(data2);
+        nowRows.push(data3);
+        nowRows.push(data4);
+        nowRows.push(data5);
+        setRows(nowRows);
+      }
+    }
+  }
+
+  const selectList = (ids:any) =>{
+    let idList:number[] = [];
+    Object.keys(ids).forEach(function (key) {
+      idList.push(Number(ids[key]))
+    })
+    idList.sort();
+
+    let regiList:DateTime[] = []
+    for(let i=0; i<rows.length; i++){
+      if(idList.includes(rows[i].id)){
+        regiList.push({
+          id: regiList.length+1,
+          date: rows[i].date,
+          time: rows[i].time
+        })
+      }
+    }
+    setRegistList(regiList)
+    if(values.title!=="" && values.content!=="" && values.period!=="" && values.maxSubjects>0 && values.reward!=="" && regiList.length!==0){
+      setBtnState({ ...btnState, state: false });
+    }
+    else{
+      setBtnState({ ...btnState, state: true });
+    }
+    console.log(regiList)
+  }
   
   const [values, setValues] = React.useState<State>({
     title: '',
     content: '',
     maxSubjects: 0,
-    period: "",
+    period: "1コマ",
     reward: "",
     sex: 2,
     minAge: 0,
@@ -67,27 +141,27 @@ const Request = () => {
 
   const buttonJudge = (prop:keyof State) => {
     if(prop==="title"){
-      if(values.content!=="" && values.maxSubjects>0 && values.period!=="" && values.reward!==""){
+      if(values.content!=="" && values.maxSubjects>0 && values.period!=="" && values.reward!=="" && registList.length!==0){
         return true;
       }
     }
     else if(prop==="content"){
-      if(values.title!=="" && values.maxSubjects>0 && values.period!=="" && values.reward!==""){
+      if(values.title!=="" && values.maxSubjects>0 && values.period!=="" && values.reward!=="" && registList.length!==0){
         return true;
       }
     }
     else if(prop==="maxSubjects"){
-      if(values.title!=="" && values.content!=="" && values.period!=="" && values.reward!==""){
+      if(values.title!=="" && values.content!=="" && values.period!=="" && values.reward!=="" && registList.length!==0){
         return true;
       }
     }
     else if(prop==="period"){
-      if(values.title!=="" && values.content!=="" && values.maxSubjects>0 && values.reward!==""){
+      if(values.title!=="" && values.content!=="" && values.maxSubjects>0 && values.reward!=="" && registList.length!==0){
         return true;
       }
     }
     else if(prop==="reward"){
-      if(values.title!=="" && values.content!=="" && values.maxSubjects>0 && values.period!==""){
+      if(values.title!=="" && values.content!=="" && values.maxSubjects>0 && values.period!=="" && registList.length!==0){
         return true;
       }
     }
@@ -191,14 +265,33 @@ const Request = () => {
         </div>
         <div className='input_request'>
           <Box component="form" sx={{'& > :not(style)': { m: 0, width: '30ch' },}} noValidate autoComplete="on">
-            <TextField error={bools.period} id="outlined-basic" label="所要時間" variant="outlined" onChange={handleChange('period')}/>
-          </Box>
-        </div>
-        <div className='input_request'>
-          <Box component="form" sx={{'& > :not(style)': { m: 0, width: '30ch' },}} noValidate autoComplete="on">
             <TextField error={bools.reward} id="outlined-basic" label="報酬" variant="outlined" onChange={handleChange('reward')}/>
           </Box>
         </div>
+        {/* <div className='input_request'>
+          <Box component="form" sx={{'& > :not(style)': { m: 0, width: '30ch' },}} noValidate autoComplete="on">
+            <TextField error={bools.period} id="outlined-basic" label="所要時間" variant="outlined" onChange={handleChange('period')}/>
+          </Box>
+        </div> */}
+
+        <div className="calender_request">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="実験候補日"
+              value={calenderValue}
+              onChange={(newValue) => {
+                SetCalenderValue(newValue);
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </div>
+        <div className="dateList_request" style={{ width: '25%' }}>
+          <div style={{ height: 400 }}>
+            <DataGrid checkboxSelection={checkboxSelection} rows={rows} columns={columns} pageSize={5} onSelectionModelChange={(id) => selectList(id)} />
+          </div>
+        </div>
+
         <h3 className="termsText_request">被験者の条件（任意）</h3>
         <div className='input_request'>
           <Box sx={{'& > :not(style)': { m: 1, width: '20ch' },}}>
@@ -220,9 +313,19 @@ const Request = () => {
           </Box>
         </div>
         <div className='margin_request'/>
-        <Button disabled={btnState.state} onClick={()=>CreateRecruitment()} variant="contained" startIcon={<CreateIcon />} component={Link} to="/request">
-          登録
-        </Button>
+        
+        
+
+
+
+
+
+
+        <div className="register_request">
+          <Button disabled={btnState.state} onClick={()=>CreateRecruitment()} variant="contained" startIcon={<CreateIcon />} component={Link} to="/request">
+            登録
+          </Button>
+        </div>
       </div>
     </>
   );

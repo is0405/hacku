@@ -19,3 +19,18 @@
 .termsText_request{
   margin-top: 3vh;
 }
+
+.register_request{
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+}
+
+.calender_request{
+  margin-top: 2vh;
+}
+
+.dateList_request{
+  margin-top: 1vh;
+  margin-left: auto;
+  margin-right: auto;
+}
