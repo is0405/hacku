@@ -126,5 +126,14 @@ func (s *Server) Route() *mux.Router {
 	r.Methods(http.MethodPost).Path("/hired/{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.PostHired}))
 	r.Methods(http.MethodDelete).Path("/hired/{recruitment_id}").Handler(authChain.Then(AppHandler{HiredControlloer.DeleteHired}))
 
+	//日程調整
+	CalenderControlloer := controller.NewCalender(s.db)
+	r.Methods(http.MethodPost).Path("/carender/{recruitment_id}").Handler(authChain.Then(AppHandler{CalenderControlloer.PostRecCalender}))
+	r.Methods(http.MethodGet).Path("/carender/{recruitment_id}").Handler(authChain.Then(AppHandler{CalenderControlloer.GetCalender}))
+	r.Methods(http.MethodPost).Path("/carender/{recruitment_id}").Handler(authChain.Then(AppHandler{CalenderControlloer.PatchPartiCalender}))
+	
+
+	
+	
 	return r
 }

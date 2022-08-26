@@ -44,6 +44,24 @@ CREATE TABLE `participation` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `recruitment_id` int NOT NULL,
   `user_id` int NOT NULL,
+  `calender_id` int NOT NULL DEFAULT -1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `calender` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `date_id` int NOT NULL,
+  `recruitment_id` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `calender_date` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `date` varchar(64) NOT NULL,
+  `time` varchar(64) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
