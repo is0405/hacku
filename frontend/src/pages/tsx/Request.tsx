@@ -59,8 +59,8 @@ const Request = () => {
   const [registList, setRegistList] = React.useState<DateTime[]>([]);
 
   const columns = [
-    { field: 'date', headerName: '日程', width: 150 },
-    { field: 'time', headerName: '時間', width: 150 },
+    { field: 'date', headerName: '実験候補日', width: 150 },
+    { field: 'time', headerName: '実験候補時間', width: 150 },
   ];
 
   const SetCalenderValue = (newValue:Dayjs | null) =>{
