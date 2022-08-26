@@ -13,12 +13,12 @@ func CheckUser(mu *model.User, passwordCheck bool) bool {
 	}
 	mu.Name = ReplaceString(mu.Name)
 	
-	if mu.Age < 18 {
-		return false
-	}
+	// if mu.Age < 18 {
+	// 	return false
+	// }
 
 	//法(2)・産社(2)・国際(2)・文(2)・言語・先端・映像(2)・経済(2)・スポーツ(2)・食マネ(2)・理工(2)・情理(2)・生命(2)・薬(2)・経営(2)・政策(2)・心理・グローバル・人間科学・テク
-	if mu.Faculty < 0 && 20 <= mu.Faculty {
+	if mu.Faculty < 0 && 21 <= mu.Faculty {
 		return false
 	}
 

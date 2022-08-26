@@ -50,8 +50,8 @@ const Request = () => {
     period: "",
     reward: "",
     sex: 2,
-    minAge: 18,
-    maxAge: 60,
+    minAge: 0,
+    maxAge: 100,
     conditions: '',
   });
   const [bools, setBools] = useState<Bool>({

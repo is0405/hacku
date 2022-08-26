@@ -48,6 +48,7 @@ interface State {
   maxAge: number,
   nowSubjects: number,
   iamParticipation: boolean,
+  myAge: number,
 }
 
 export default function RecipeReviewCard(props:{data:State}) {
